@@ -1,0 +1,370 @@
+/* ═══════════════════════════════════════════════════════
+   Chamundeeswari Publications — Flip Book Viewer
+   viewer.css
+═══════════════════════════════════════════════════════ */
+
+:root {
+    --toolbar-h:  50px;
+    --toolbar-bg: rgba(255, 252, 247, 0.96);
+}
+
+/* ── SPA view switching ─────────────────────────────── */
+body.view-viewer {
+    overflow: hidden;
+    height: 100dvh;
+}
+
+body.view-viewer #view-viewer {
+    display: flex;
+    flex-direction: column;
+    height: calc(100dvh - var(--nav-h));
+    position: relative;
+}
+
+/* ── Viewer-state nav adjustments (inside .site-nav) ── */
+body.view-viewer .site-nav .nav-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all var(--ease);
+}
+
+body.view-viewer .site-nav .nav-back:hover {
+    color: var(--gold);
+    background: var(--gold-glow);
+    border-color: var(--gold-border);
+}
+
+body.view-viewer .site-nav .nav-book-title {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 12px;
+}
+
+/* ── Loading overlay (inside #view-viewer) ─────────── */
+.viewer-loading {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.viewer-loading.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── Standalone viewer.html loading screen ─────────── */
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+#loading-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    text-align: center;
+}
+
+.loader-logo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.loader-pub-name {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+}
+
+.loader-pub-sub {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.5em;
+    color: var(--text-muted);
+}
+
+.loader-bar-wrap {
+    width: 260px;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.10);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loader-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-light));
+    border-radius: 2px;
+    transition: width 0.2s ease;
+}
+
+.loader-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    min-height: 18px;
+}
+
+/* ── Standalone viewer.html nav ────────────────────── */
+.viewer-nav {
+    height: var(--nav-h);
+    background: #fffcf7;
+    border-bottom: 1px solid var(--gold-border);
+    flex-shrink: 0;
+    z-index: 100;
+    box-shadow: 0 1px 12px rgba(150, 80, 48, 0.06);
+    transition: all 0.3s ease;
+}
+
+.viewer-nav .nav-inner {
+    height: 100%;
+    max-width: unset;
+    padding: 0 20px;
+}
+
+.viewer-nav .nav-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all var(--ease);
+}
+
+.viewer-nav .nav-back:hover {
+    color: var(--gold);
+    background: var(--gold-glow);
+    border-color: var(--gold-border);
+}
+
+.viewer-nav .nav-book-title {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 12px;
+}
+
+/* ── Main Viewer ───────────────────────────────────── */
+.viewer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 35%, #e8dcc8 0%, #d8ccb4 100%);
+    min-height: 0;
+    transition: all 0.3s ease;
+}
+
+.book-stage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#book {
+    box-shadow:
+        0 8px 32px rgba(100, 50, 16, 0.20),
+        0 0 0 1px rgba(0, 0, 0, 0.05),
+        0 32px 64px rgba(100, 50, 16, 0.12);
+}
+
+.page {
+    background: #fff;
+    overflow: hidden;
+    display: block;
+}
+
+.page canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ── Nav Arrows ────────────────────────────────────── */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 76px;
+    background: rgba(200, 118, 62, 0.08);
+    border: 1px solid rgba(200, 118, 62, 0.20);
+    border-radius: 8px;
+    color: var(--gold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--ease);
+    z-index: 10;
+}
+
+.nav-arrow:hover {
+    background: rgba(200, 118, 62, 0.16);
+    border-color: var(--gold);
+    transform: translateY(-50%) scale(1.04);
+}
+
+.nav-prev { left: 12px; }
+.nav-next { right: 12px; }
+
+/* ── Toolbar ───────────────────────────────────────── */
+.toolbar {
+    height: var(--toolbar-h);
+    background: var(--toolbar-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--gold-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+    z-index: 100;
+    transition: all 0.3s ease;
+    box-shadow: 0 -1px 12px rgba(150, 80, 48, 0.06);
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 22px;
+    background: var(--gold-border);
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
+/* ── Page Counter ──────────────────────────────────── */
+.page-counter {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+#page-input {
+    width: 42px;
+    padding: 4px 6px;
+    background: rgba(200, 118, 62, 0.06);
+    border: 1px solid var(--gold-border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    outline: none;
+    transition: border-color var(--ease);
+    -moz-appearance: textfield;
+}
+
+#page-input::-webkit-inner-spin-button,
+#page-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+#page-input:focus { border-color: var(--gold); }
+
+.page-sep { color: var(--text-muted); }
+#total-pages { color: var(--text-dim); min-width: 22px; }
+
+/* ── Viewer Footer ─────────────────────────────────── */
+.viewer-footer {
+    background: var(--bg-dark);
+    border-top: 1px solid var(--gold-border);
+    padding: 8px 20px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.viewer-footer p {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FULLSCREEN MODE
+═══════════════════════════════════════════════════════ */
+body.is-fullscreen .site-nav      { display: none; }
+body.is-fullscreen .viewer-nav    { display: none; }
+body.is-fullscreen .viewer-footer { display: none; }
+
+body.is-fullscreen #view-viewer {
+    height: 100dvh;
+}
+
+body.is-fullscreen .toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 252, 247, 0.94);
+    border-top: 1px solid var(--gold-border);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 500;
+}
+
+body.is-fullscreen .toolbar:hover { opacity: 1; }
+body.is-fullscreen .viewer {
+    height: 100dvh;
+    flex: unset;
+}
+
+body.is-fullscreen .nav-prev { left: 20px; }
+body.is-fullscreen .nav-next { right: 20px; }
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 768px) {
+    .nav-arrow { width: 32px; height: 56px; }
+    .nav-prev  { left: 4px; }
+    .nav-next  { right: 4px; }
+    .viewer-nav .nav-book-title { font-size: 11px; }
+    body.view-viewer .site-nav .nav-book-title { font-size: 11px; }
+}

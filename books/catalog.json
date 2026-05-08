@@ -1,0 +1,17 @@
+{
+  "publisher": "Chamundeeswari Publications",
+  "books": [
+    {
+      "id": "pip-the-penguin",
+      "title": "Pip the Penguin Goes to School",
+      "file": "books/pip-the-penguin.pdf",
+      "series": "Pip's Penguin Readers",
+      "seriesBook": "Book 1",
+      "ageRange": "Ages 3–6",
+      "pages": 33,
+      "phonicsFocus": "P sounds · Short vowels · CVC words · AABB rhyme",
+      "description": "Pip is nervous about his first day at school — but a new friend and a big warm smile make it the best day ever.",
+      "year": 2026
+    }
+  ]
+}

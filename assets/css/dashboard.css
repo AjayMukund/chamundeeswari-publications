@@ -1,0 +1,241 @@
+/* ═══════════════════════════════════════════════════════
+   Chamundeeswari Publications — Dashboard
+   dashboard.css
+═══════════════════════════════════════════════════════ */
+
+body { overflow-y: auto; }
+
+/* ── Hero ──────────────────────────────────────────── */
+.hero {
+    padding: 60px 28px 48px;
+    text-align: center;
+    background: linear-gradient(180deg, #f0ddc8 0%, var(--bg-deep) 100%);
+    border-bottom: 1px solid var(--gold-border);
+}
+
+.hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+}
+
+.hero-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ── Library Section ───────────────────────────────── */
+.library {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 28px 64px;
+}
+
+.library-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.library-title {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.06em;
+}
+
+.library-count {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ── Books Grid ────────────────────────────────────── */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+}
+
+/* ── Book Card ─────────────────────────────────────── */
+.book-card {
+    background: var(--bg-card);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--ease);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(150, 80, 48, 0.06);
+}
+
+.book-card:hover {
+    background: var(--bg-card-h);
+    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(150, 80, 48, 0.14), 0 0 0 1px var(--gold-border);
+}
+
+/* Cover image */
+.card-cover {
+    position: relative;
+    aspect-ratio: 3/4;
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
+.card-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.book-card:hover .card-cover img {
+    transform: scale(1.03);
+}
+
+/* Skeleton loader for cover */
+.cover-skeleton {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #ede0ce 25%, #e4d5bf 50%, #ede0ce 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(42, 22, 6, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s ease;
+}
+
+.book-card:hover .card-overlay {
+    background: rgba(42, 22, 6, 0.28);
+}
+
+.overlay-btn {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.25s ease;
+    padding: 9px 18px;
+    background: var(--gold);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.book-card:hover .overlay-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Card body */
+.card-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.card-series {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    text-transform: uppercase;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.35;
+}
+
+.card-description {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    flex: 1;
+    margin-top: 2px;
+}
+
+.card-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.badge {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+}
+
+.badge-age {
+    background: rgba(200, 118, 62, 0.10);
+    color: var(--gold);
+    border: 1px solid var(--gold-border);
+}
+
+.badge-series {
+    background: rgba(100, 140, 130, 0.10);
+    color: var(--text-dim);
+    border: 1px solid rgba(100, 140, 130, 0.22);
+}
+
+/* ── Empty State ───────────────────────────────────── */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 600px) {
+    .hero { padding: 40px 20px 32px; }
+    .library { padding: 32px 20px 48px; }
+    .books-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+
+@media (max-width: 380px) {
+    .books-grid { grid-template-columns: 1fr; }
+}
