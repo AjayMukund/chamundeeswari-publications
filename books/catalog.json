@@ -2,6 +2,18 @@
   "publisher": "Chamundeeswari Publications",
   "books": [
     {
+      "id": "mango-the-monkey",
+      "title": "Mango the Monkey Makes a Friend",
+      "file": "books/mango-the-monkey.pdf",
+      "series": "Jungle Friends",
+      "seriesBook": "Book 1",
+      "ageRange": "Ages 3–6",
+      "pages": 33,
+      "phonicsFocus": "M sounds · Short vowels · CVC words · AABB rhyme",
+      "description": "Mango the monkey has plenty of mangoes but no friends — until a clumsy accident and a gentle bear change everything.",
+      "year": 2026
+    },
+    {
       "id": "pip-the-penguin",
       "title": "Pip the Penguin Goes to School",
       "file": "books/pip-the-penguin.pdf",
