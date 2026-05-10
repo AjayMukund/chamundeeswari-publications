@@ -6,8 +6,8 @@
 const grid      = document.getElementById('books-grid');
 const bookCount = document.getElementById('book-count');
 
-/* ── Extract cover thumbnail from PDF page 1 ──────── */
-async function extractCover(pdfUrl, cacheKey) {
+/* ── Extract cover thumbnail from PDF page 1 (fallback) ── */
+async function extractCoverFromPdf(pdfUrl, cacheKey) {
     const stored = sessionStorage.getItem(cacheKey);
     if (stored) return stored;
 
@@ -50,25 +50,29 @@ function createCard(book) {
         </div>
     `;
 
-    // Hover → silently start pre-rendering
-    card.addEventListener('mouseenter', () => {
-        App.getOrRender(book);
-    });
+    card.addEventListener('mouseenter', () => { App.getOrRender(book); });
+    card.addEventListener('click',      () => { App.openBook(book); });
 
-    // Click → open (instantly if already cached)
-    card.addEventListener('click', () => {
-        App.openBook(book);
-    });
+    const skel = card.querySelector(`#skel-${book.id}`);
 
-    // Load cover thumbnail asynchronously
-    extractCover(book.file, `cover_${book.id}`).then(url => {
-        const skel = document.getElementById(`skel-${book.id}`);
-        if (!url || !skel) return;
+    if (book.cover) {
+        // Static image — instant load, no PDF.js needed
         const img = document.createElement('img');
-        img.src = url;
-        img.alt = book.title;
-        skel.replaceWith(img);
-    });
+        img.src   = book.cover;
+        img.alt   = book.title;
+        img.onload  = () => skel.replaceWith(img);
+        img.onerror = () => extractCoverFromPdf(book.file, `cover_${book.id}`)
+                               .then(url => { if (url) { img.src = url; skel.replaceWith(img); } });
+    } else {
+        // Fallback: render page 1 from PDF
+        extractCoverFromPdf(book.file, `cover_${book.id}`).then(url => {
+            if (!url) return;
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = book.title;
+            skel.replaceWith(img);
+        });
+    }
 
     return card;
 }
