@@ -6,7 +6,7 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-const RENDER_SCALE = 2.8;
+const RENDER_SCALE = 1.0;
 
 /* ── Caches ────────────────────────────────────────── */
 const _pageCache     = new Map();  // bookId → pageEls[]
@@ -44,9 +44,18 @@ async function _renderBook(book) {
             viewport
         }).promise;
 
+        // Convert to JPEG blob → img, releasing GPU canvas texture memory
+        const blobUrl = await new Promise(resolve =>
+            canvas.toBlob(blob => resolve(URL.createObjectURL(blob)), 'image/jpeg', 0.95)
+        );
+
+        const img     = document.createElement('img');
+        img.src       = blobUrl;
+        img.draggable = false;
+
         const div = document.createElement('div');
         div.className = 'page';
-        div.appendChild(canvas);
+        div.appendChild(img);
         els.push(div);
 
         if (state) {

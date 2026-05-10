@@ -50,8 +50,7 @@ function createCard(book) {
         </div>
     `;
 
-    card.addEventListener('mouseenter', () => { App.getOrRender(book); });
-    card.addEventListener('click',      () => { App.openBook(book); });
+    card.addEventListener('click', () => { App.openBook(book); });
 
     const skel = card.querySelector(`#skel-${book.id}`);
 

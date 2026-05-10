@@ -221,10 +221,12 @@ body.view-viewer .site-nav .nav-book-title {
     display: block;
 }
 
-.page canvas {
+.page canvas,
+.page img {
     display: block;
     width: 100% !important;
     height: 100% !important;
+    object-fit: fill;
 }
 
 /* ── Nav Arrows ────────────────────────────────────── */
