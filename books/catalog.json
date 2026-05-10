@@ -26,6 +26,19 @@
       "phonicsFocus": "P sounds · Short vowels · CVC words · AABB rhyme",
       "description": "Pip is nervous about his first day at school — but a new friend and a big warm smile make it the best day ever.",
       "year": 2026
+    },
+    {
+      "id": "luna-the-firefly",
+      "title": "Luna the Firefly Finds Her Glow",
+      "file": "books/luna-the-firefly.pdf",
+      "cover": "books/Covers/Cover Page - Luna the Firefly Finds Her Glow.png",
+      "series": "Meadow Friends",
+      "seriesBook": "Book 1",
+      "ageRange": "Ages 3–6",
+      "pages": 33,
+      "phonicsFocus": "L sounds · Short vowels · CVC words · AABB rhyme",
+      "description": "Luna is the only firefly who can't glow — but a kind frog and one brave stormy night reveal that her light was inside her all along.",
+      "year": 2026
     }
   ]
 }
