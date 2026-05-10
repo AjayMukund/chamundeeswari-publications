@@ -104,7 +104,7 @@ function showDashboard() {
     navDashState.hidden   = false;
     document.body.classList.remove('view-viewer');
     document.body.classList.add('view-dashboard');
-    document.title = 'Library — Chamundeeswari Publications';
+    document.title = 'Chamundeeswari Publications';
 }
 
 /* ── View: Viewer ──────────────────────────────────── */
