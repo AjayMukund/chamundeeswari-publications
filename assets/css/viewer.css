@@ -206,6 +206,13 @@ body.view-viewer .site-nav .nav-book-title {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+}
+
+/* Wrapper PageFlip never touches — we translate this for cover centering */
+.book-wrapper {
+    display: inline-flex;
+    transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 #book {
@@ -213,6 +220,54 @@ body.view-viewer .site-nav .nav-book-title {
         0 8px 32px rgba(100, 50, 16, 0.20),
         0 0 0 1px rgba(0, 0, 0, 0.05),
         0 32px 64px rgba(100, 50, 16, 0.12);
+}
+
+/* ── Book spine gutter shadow ──────────────────────── */
+.book-spine {
+    position: absolute;
+    width: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(to right,
+        transparent                  0%,
+        rgba(24, 10, 0, 0.03)       18%,
+        rgba(24, 10, 0, 0.14)       43%,
+        rgba(24, 10, 0, 0.24)       50%,
+        rgba(24, 10, 0, 0.14)       57%,
+        rgba(24, 10, 0, 0.03)       82%,
+        transparent                 100%
+    );
+}
+
+/* ── Page edge stack strips ────────────────────────── */
+.page-stack {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    /* Vertical lines (to right) = individual page edges running top→bottom */
+    background: repeating-linear-gradient(
+        to right,
+        #faf2e6   0px,    /* page face — light cream  */
+        #faf2e6   2.5px,
+        #b08848   2.5px,  /* page edge — warm tan     */
+        #b08848   3.5px,
+        transparent 3.5px,/* gap between pages        */
+        transparent 8px
+    );
+    transition: width 0.45s ease;
+}
+
+.stack-right {
+    border-radius: 0 2px 2px 0;
+    /* inset shadow: book page casts shadow onto the stack at the join */
+    box-shadow: inset 5px 0 10px rgba(70, 32, 4, 0.20), 2px 0 5px rgba(60, 28, 4, 0.12);
+}
+
+.stack-left {
+    border-radius: 2px 0 0 2px;
+    box-shadow: inset -5px 0 10px rgba(70, 32, 4, 0.20), -2px 0 5px rgba(60, 28, 4, 0.12);
 }
 
 .page {

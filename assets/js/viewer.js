@@ -17,6 +17,87 @@ const bookStage    = $('book-stage');
 const totalPagesEl = $('total-pages');
 const pageInput    = $('page-input');
 
+/* ── Book decoration overlays (spine + page stacks) ── */
+const _spineEl     = document.createElement('div');
+_spineEl.className = 'book-spine';
+_spineEl.setAttribute('aria-hidden', 'true');
+_spineEl.hidden    = true;
+bookStage.appendChild(_spineEl);
+
+const _stackRight     = document.createElement('div');
+_stackRight.className = 'page-stack stack-right';
+_stackRight.setAttribute('aria-hidden', 'true');
+_stackRight.hidden    = true;
+bookStage.appendChild(_stackRight);
+
+const _stackLeft     = document.createElement('div');
+_stackLeft.className = 'page-stack stack-left';
+_stackLeft.setAttribute('aria-hidden', 'true');
+_stackLeft.hidden    = true;
+bookStage.appendChild(_stackLeft);
+
+/* ── Decoration state ──────────────────────────────── */
+const _decor = {};
+
+function _positionDecor(w, h, mobile) {
+    const stageW     = bookStage.clientWidth;
+    const stageH     = bookStage.clientHeight;
+    const bookTotalW = mobile ? w : w * 2;
+
+    _decor.stageW    = stageW;
+    _decor.bookLeft  = (stageW - bookTotalW) / 2;
+    _decor.bookRight = (stageW + bookTotalW) / 2;
+    _decor.bookTop   = Math.max(0, (stageH - h) / 2);
+    _decor.bookH     = h;
+    _decor.maxStackW = Math.min(24, Math.round(w * 0.096));
+    _decor.mobile    = mobile;
+
+    if (mobile) {
+        _spineEl.hidden = true;
+    } else {
+        _spineEl.hidden        = false;
+        _spineEl.style.top     = _decor.bookTop + 'px';
+        _spineEl.style.height  = h + 'px';
+    }
+
+    _updateStacks(currentPage, totalPages);
+}
+
+function _updateStacks(pageIdx, total) {
+    if (_decor.mobile || !_decor.bookH || total < 2) {
+        _stackLeft.hidden  = true;
+        _stackRight.hidden = true;
+        return;
+    }
+
+    const progress = pageIdx / (total - 1);
+    const maxW     = _decor.maxStackW;
+    const leftW    = Math.round(progress * maxW);
+    const rightW   = maxW - leftW;
+    const top      = _decor.bookTop;
+    const h        = _decor.bookH;
+
+    // Left stack: anchor right edge to book's left edge — only width animates
+    _stackLeft.hidden = leftW < 1;
+    if (leftW >= 1) {
+        _stackLeft.style.top    = top + 'px';
+        _stackLeft.style.height = h   + 'px';
+        _stackLeft.style.width  = leftW + 'px';
+        _stackLeft.style.left   = '';
+        _stackLeft.style.right  = (_decor.stageW - _decor.bookLeft) + 'px';
+    }
+
+    // Right stack: anchor left edge to book's right edge — only width animates
+    _stackRight.hidden = rightW < 1;
+    if (rightW >= 1) {
+        _stackRight.style.top    = top + 'px';
+        _stackRight.style.height = h   + 'px';
+        _stackRight.style.width  = rightW + 'px';
+        _stackRight.style.right  = '';
+        _stackRight.style.left   = _decor.bookRight + 'px';
+    }
+}
+
 /* ── Page turn sound ───────────────────────────────── */
 const pageTurnAudio = new Audio('assets/audio/page-turn.mp3');
 pageTurnAudio.preload = 'auto';
@@ -89,10 +170,13 @@ function buildFlipBook(savedPage = 0) {
 
     pageInput.value = savedPage + 1;
 
+    _positionDecor(w, h, mobile);
+
     flipBook.on('flip', e => {
         currentPage     = e.data;
         pageInput.value = currentPage + 1;
         playPageTurnSound();
+        _updateStacks(currentPage, totalPages);
     });
 
     flipBook.on('changeState', () => {
