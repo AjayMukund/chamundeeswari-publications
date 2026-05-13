@@ -211,6 +211,40 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen();
 });
 
+/* ── Touchpad horizontal swipe ─────────────────────── */
+let _wheelAccum  = 0;
+let _wheelTimer  = null;
+let _wheelLocked = false;
+
+window.addEventListener('wheel', e => {
+    if (!flipBook) return;
+    if (!document.body.classList.contains('view-viewer')) return;
+
+    const absX = Math.abs(e.deltaX);
+    const absY = Math.abs(e.deltaY);
+    if (absX < absY || absX < 3) return;   // vertical scroll — ignore
+
+    e.preventDefault();
+
+    _wheelAccum += e.deltaX;
+    clearTimeout(_wheelTimer);
+    _wheelTimer = setTimeout(() => {
+        _wheelAccum  = 0;
+        _wheelLocked = false;
+    }, 400);
+
+    if (_wheelLocked) return;
+    if (_wheelAccum > 40) {
+        _wheelLocked = true;
+        _wheelAccum  = 0;
+        next();
+    } else if (_wheelAccum < -40) {
+        _wheelLocked = true;
+        _wheelAccum  = 0;
+        prev();
+    }
+}, { passive: false });
+
 /* ── Back to Library button ────────────────────────── */
 $('btn-back-library').addEventListener('click', () => {
     if (document.fullscreenElement) document.exitFullscreen();

@@ -155,13 +155,24 @@ async function openBook(book) {
 
             const renderPromise = getOrRender(book);
 
+            let _lastProgress = 'Opening book…';
+
             const detach = _attachProgress(book.id, (i, total) => {
                 const pct = Math.round(6 + (i / total) * 90);
-                loaderBar.style.width  = pct + '%';
-                loaderText.textContent = `Rendering page ${i} of ${total}…`;
+                loaderBar.style.width = pct + '%';
+                _lastProgress = `Rendering page ${i} of ${total}…`;
+                if (!document.hidden) loaderText.textContent = _lastProgress;
             });
 
+            const _onVis = () => {
+                loaderText.textContent = document.hidden
+                    ? 'Paused — please stay on this tab to continue rendering…'
+                    : _lastProgress;
+            };
+            document.addEventListener('visibilitychange', _onVis);
+
             pageEls = await renderPromise;
+            document.removeEventListener('visibilitychange', _onVis);
             detach();
 
             loaderBar.style.width  = '100%';
