@@ -335,20 +335,20 @@ html.dark .site-footer { background: #100a03; }
 
 /* Outer wrapper: gentle floating drift */
 .bgp-butterfly {
-    position: absolute;
-    color: var(--gold);
-    opacity: 0.14;
+    color: var(--gold); /* default; overridden per-element in JS */
+    opacity: 0.15;
     animation: bgp-bfly-drift 9s ease-in-out infinite;
     transition: opacity 0.35s ease, filter 0.35s ease;
     will-change: transform, opacity;
 }
 
 .bgp-butterfly:hover {
-    opacity: 0.80;
+    opacity: 0.92;
     filter:
-        drop-shadow(0 0 5px rgba(200, 118, 62, 1.00))
-        drop-shadow(0 0 14px rgba(200, 118, 62, 0.65))
-        drop-shadow(0 0 28px rgba(200, 118, 62, 0.30));
+        brightness(1.30)
+        drop-shadow(0 0 5px rgba(255, 255, 255, 0.90))
+        drop-shadow(0 0 14px rgba(255, 255, 255, 0.55))
+        drop-shadow(0 0 30px rgba(255, 255, 255, 0.25));
     animation-play-state: paused;
     z-index: 3;
 }
