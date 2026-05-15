@@ -359,6 +359,7 @@ html.dark .site-footer { background: #100a03; }
     animation: bgp-bfly-drift 9s ease-in-out infinite;
     transition: opacity 0.35s ease, filter 0.35s ease;
     will-change: transform, opacity;
+    perspective: 180px; /* gives 3D depth to child wing rotateY */
 }
 
 .bgp-butterfly:hover {
@@ -378,12 +379,12 @@ html.dark .site-footer { background: #100a03; }
 }
 
 @keyframes bgp-bfly-drift {
-    0%   { transform: translate(0px,   0px)  rotate(-5deg) scale(1.00); }
-    20%  { transform: translate(6px,  -9px)  rotate( 4deg) scale(1.05); }
-    40%  { transform: translate(-4px, -5px)  rotate(-3deg) scale(0.97); }
-    60%  { transform: translate(8px,  -12px) rotate( 6deg) scale(1.04); }
-    80%  { transform: translate(-6px,  3px)  rotate(-4deg) scale(0.98); }
-    100% { transform: translate(0px,   0px)  rotate(-5deg) scale(1.00); }
+    0%   { transform: translate(0px,   0px)  rotateX(-10deg) rotate(-3deg) scale(1.00); }
+    20%  { transform: translate(5px,  -8px)  rotateX(-7deg)  rotate( 3deg) scale(1.04); }
+    40%  { transform: translate(-3px, -4px)  rotateX(-12deg) rotate(-2deg) scale(0.97); }
+    60%  { transform: translate(7px, -10px)  rotateX(-8deg)  rotate( 5deg) scale(1.03); }
+    80%  { transform: translate(-5px,  2px)  rotateX(-11deg) rotate(-3deg) scale(0.98); }
+    100% { transform: translate(0px,   0px)  rotateX(-10deg) rotate(-3deg) scale(1.00); }
 }
 
 /* Wing halves — positioned relative to butterfly wrapper */
@@ -393,25 +394,32 @@ html.dark .site-footer { background: #100a03; }
     top: 0;
     height: 100%;
     width: 50%;
+    will-change: transform;
 }
 
-/* Left wing folds toward center (right edge is the body join) */
+/* Left wing — 3D rotateY fold, pivot at right edge (body join) */
 .bfly-l {
     right: 50%;
     transform-origin: 100% 50%;
-    animation: bfly-fold 0.55s ease-in-out infinite alternate;
+    animation: bfly-l-fold 0.55s ease-in-out infinite alternate;
 }
 
-/* Right wing folds toward center (left edge is the body join) */
+/* Right wing — 3D rotateY fold, pivot at left edge (body join) */
 .bfly-r {
     left: 50%;
     transform-origin: 0% 50%;
-    animation: bfly-fold 0.55s ease-in-out infinite alternate;
+    animation: bfly-r-fold 0.55s ease-in-out infinite alternate;
 }
 
-@keyframes bfly-fold {
-    from { transform: scaleX(1);    }
-    to   { transform: scaleX(0.07); }
+/* Wing tip folds backward (away from viewer) to simulate 3D upstroke */
+@keyframes bfly-l-fold {
+    from { transform: rotateY(0deg);   }
+    to   { transform: rotateY(-72deg); }
+}
+
+@keyframes bfly-r-fold {
+    from { transform: rotateY(0deg);  }
+    to   { transform: rotateY(72deg); }
 }
 
 /* Body overlay — centered over the join line */
