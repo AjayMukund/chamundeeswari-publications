@@ -22,6 +22,30 @@
     --radius:      10px;
 }
 
+/* ── Skip-to-content ───────────────────────────────── */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 12px;
+    z-index: 9999;
+    padding: 10px 18px;
+    background: var(--gold);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 0 0 8px 8px;
+    text-decoration: none;
+    transition: top 0.15s ease;
+}
+.skip-link:focus { top: 0; outline: 2px solid #fff; outline-offset: 2px; }
+
+/* ── Focus-visible ring ────────────────────────────── */
+:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
 /* ── Reset ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 [hidden] { display: none !important; }
@@ -196,6 +220,14 @@ html.dark .site-nav {
 }
 
 html.dark .site-footer { background: #100a03; }
+
+/* ── Reduced motion ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
 
 /* ── Responsive ────────────────────────────────────── */
 @media (max-width: 600px) {

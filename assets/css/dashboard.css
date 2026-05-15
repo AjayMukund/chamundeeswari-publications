@@ -207,9 +207,14 @@ body { overflow-y: auto; }
     cursor: pointer;
 }
 
-.book-card:hover .overlay-btn {
+.book-card:hover .overlay-btn,
+.book-card:focus-within .overlay-btn {
     opacity: 1;
     transform: translateY(0);
+}
+
+.book-card:focus-within .card-overlay {
+    background: rgba(42, 22, 6, 0.28);
 }
 
 /* Card body */

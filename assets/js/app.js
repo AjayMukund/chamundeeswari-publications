@@ -110,6 +110,7 @@ function _attachProgress(bookId, cb) {
 
 /* ── View: Dashboard ───────────────────────────────── */
 function showDashboard() {
+    const returning = !viewViewer.hidden;
     viewViewer.hidden     = true;
     viewDashboard.hidden  = false;
     navViewerState.hidden = true;
@@ -118,6 +119,12 @@ function showDashboard() {
     document.body.classList.add('view-dashboard');
     document.title = 'Chamundeeswari Publications';
     history.replaceState({}, '', location.pathname);
+    if (returning) {
+        setTimeout(() => {
+            const grid = document.getElementById('books-grid');
+            if (grid) { grid.tabIndex = -1; grid.focus(); }
+        }, 50);
+    }
 }
 
 /* ── View: Viewer ──────────────────────────────────── */
@@ -195,6 +202,7 @@ async function openBook(book) {
         setTimeout(() => {
             viewerLoading.classList.remove('fade-out');
             viewerLoading.hidden = true;
+            document.getElementById('page-input')?.focus();
         }, 600);
 
     } catch (err) {

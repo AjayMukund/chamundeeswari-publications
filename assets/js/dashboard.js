@@ -55,6 +55,10 @@ function createCard(book) {
         </div>
     `;
 
+    card.setAttribute('role', 'article');
+    card.setAttribute('aria-label', book.title);
+    card.querySelector('.overlay-btn').setAttribute('aria-label', `Open ${book.title}`);
+
     card.addEventListener('click', () => { App.openBook(book); });
 
     if (book.purchaseUrl) {

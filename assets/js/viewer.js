@@ -12,6 +12,15 @@ let soundOn     = true;
 let bookId      = null;
 let _otherBooks = [];
 
+const _reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── Aria-live region (page announcements) ─────────── */
+const _liveRegion = document.createElement('div');
+_liveRegion.setAttribute('aria-live', 'polite');
+_liveRegion.setAttribute('aria-atomic', 'true');
+_liveRegion.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+document.body.appendChild(_liveRegion);
+
 /* ── DOM refs ──────────────────────────────────────── */
 const $            = id => document.getElementById(id);
 const bookEl       = $('book');
@@ -232,7 +241,7 @@ function buildFlipBook(savedPage = 0) {
         disableFlipByClick:  false,
         mobileScrollSupport: false,
         swipeDistance:       30,
-        flippingTime:        900,
+        flippingTime:        _reducedMotion ? 0 : 900,
     });
 
     flipBook.loadFromHTML(bookEl.querySelectorAll('.page'));
@@ -254,6 +263,7 @@ function buildFlipBook(savedPage = 0) {
         pageInput.value = currentPage + 1;
         playPageTurnSound();
         _updateStacks(currentPage, totalPages);
+        _liveRegion.textContent = `Page ${currentPage + 1} of ${totalPages}`;
         if (bookId) localStorage.setItem('cp-progress-' + bookId, currentPage);
         if (currentPage === totalPages - 1 && _otherBooks.length) {
             setTimeout(() => _nextPanel.classList.add('visible'), 600);
@@ -390,6 +400,10 @@ document.addEventListener('fullscreenchange', () => {
     document.body.classList.toggle('is-fullscreen', isFs);
     $('icon-expand').style.display   = isFs ? 'none' : '';
     $('icon-compress').style.display = isFs ? '' : 'none';
+    $('btn-fullscreen-tb').setAttribute('aria-pressed', String(isFs));
+    $('btn-fullscreen-tb').setAttribute('aria-label', isFs ? 'Exit fullscreen' : 'Enter fullscreen');
+    $('btn-fullscreen-nav').setAttribute('aria-pressed', String(isFs));
+    $('btn-fullscreen-nav').setAttribute('aria-label', isFs ? 'Exit fullscreen' : 'Enter fullscreen');
     const saved = flipBook ? flipBook.getCurrentPageIndex() : 0;
     setTimeout(() => buildFlipBook(saved), 220);
 });
@@ -403,6 +417,7 @@ $('btn-sound').addEventListener('click', () => {
     $('icon-sound-on').style.display  = soundOn ? '' : 'none';
     $('icon-sound-off').style.display = soundOn ? 'none' : '';
     $('btn-sound').classList.toggle('active', !soundOn);
+    $('btn-sound').setAttribute('aria-pressed', String(!soundOn));
     if (soundOn) pageTurnAudio.load();
 });
 
