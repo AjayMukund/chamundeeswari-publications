@@ -77,7 +77,10 @@ function createCard(book) {
         buyBtn.target    = '_blank';
         buyBtn.rel       = 'noopener noreferrer';
         buyBtn.textContent = 'Buy Book';
-        buyBtn.addEventListener('click', e => e.stopPropagation());
+        buyBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            window.plausible?.('Buy Link', { props: { title: book.title } });
+        });
         card.querySelector('.card-body').appendChild(buyBtn);
     }
 

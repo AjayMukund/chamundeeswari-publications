@@ -10,6 +10,7 @@ let currentPage = 0;
 let totalPages  = 0;
 let soundOn     = true;
 let bookId      = null;
+let bookTitle   = null;
 let _otherBooks = [];
 
 const _reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -265,8 +266,9 @@ function buildFlipBook(savedPage = 0) {
         _updateStacks(currentPage, totalPages);
         _liveRegion.textContent = `Page ${currentPage + 1} of ${totalPages}`;
         if (bookId) localStorage.setItem('cp-progress-' + bookId, currentPage);
-        if (currentPage === totalPages - 1 && _otherBooks.length) {
-            setTimeout(() => _nextPanel.classList.add('visible'), 600);
+        if (currentPage === totalPages - 1) {
+            window.plausible?.('Reading Completed', { props: { title: bookTitle } });
+            if (_otherBooks.length) setTimeout(() => _nextPanel.classList.add('visible'), 600);
         } else {
             _nextPanel.classList.remove('visible');
         }
@@ -280,6 +282,7 @@ function buildFlipBook(savedPage = 0) {
 /* ── Print current spread ──────────────────────────── */
 function printCurrentSpread() {
     if (!flipBook) return;
+    window.plausible?.('Print Used', { props: { title: bookTitle } });
     const idx   = flipBook.getCurrentPageIndex() || 0;
     const pages = _decor.mobile
         ? [pageEls[idx]]
@@ -434,10 +437,11 @@ window.addEventListener('resize', () => {
 
 /* ── Public API (called by app.js) ─────────────────── */
 window.Viewer = {
-    build(els, savedPage = 0, id = null, otherBooks = []) {
+    build(els, savedPage = 0, id = null, otherBooks = [], title = null) {
         pageEls      = els;
         currentPage  = savedPage;
         bookId       = id;
+        bookTitle    = title;
         _otherBooks  = otherBooks;
         buildFlipBook(savedPage);
     }

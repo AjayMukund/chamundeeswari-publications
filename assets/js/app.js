@@ -149,6 +149,7 @@ async function openBook(book) {
 
     document.title = `${book.title} — Chamundeeswari Publications`;
     document.getElementById('nav-book-title').textContent = book.title;
+    window.plausible?.('Book Opened', { props: { title: book.title, series: book.series } });
 
     try {
         let pageEls;
@@ -197,7 +198,7 @@ async function openBook(book) {
         const otherBooks = _catalog.filter(b => b.id !== book.id);
         const phonicsEl  = document.getElementById('viewer-phonics');
         if (phonicsEl) phonicsEl.textContent = book.phonicsFocus || '';
-        Viewer.build(pageEls, savedPage, book.id, otherBooks);
+        Viewer.build(pageEls, savedPage, book.id, otherBooks, book.title);
 
         viewerLoading.classList.add('fade-out');
         setTimeout(() => {
