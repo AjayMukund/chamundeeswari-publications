@@ -14,6 +14,15 @@
     --gold-dim:    #965030;                    /* deeper amber                      */
     --gold-border: rgba(200, 118, 62, 0.22);   /* soft amber border                 */
     --gold-glow:   rgba(200, 118, 62, 0.08);   /* subtle amber fill                 */
+    --coral:        #e8536a;                   /* rose-coral accent                 */
+    --coral-tint:   rgba(232, 83, 106, 0.10);  /* coral fill                        */
+    --coral-border: rgba(232, 83, 106, 0.28);  /* coral border                      */
+    --teal:         #16a085;                   /* peacock teal accent               */
+    --teal-tint:    rgba(22, 160, 133, 0.10);  /* teal fill                         */
+    --teal-border:  rgba(22, 160, 133, 0.28);  /* teal border                       */
+    --violet:       #7b5ea7;                   /* amethyst accent                   */
+    --violet-tint:  rgba(123, 94, 167, 0.10);  /* violet fill                       */
+    --violet-border: rgba(123, 94, 167, 0.28); /* violet border                     */
     --text:        #2a1606;                    /* warm near-black                   */
     --text-dim:    #7a5040;                    /* medium warm brown                 */
     --text-muted:  #b8968a;                    /* soft taupe — labels, counts       */
@@ -67,11 +76,12 @@ img { display: block; max-width: 100%; }
 .site-nav {
     height: var(--nav-h);
     background: #fffcf7;
-    border-bottom: 1px solid var(--gold-border);
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(90deg, var(--gold-dim), var(--coral), var(--violet), var(--teal)) 1;
     position: sticky;
     top: 0;
     z-index: 200;
-    box-shadow: 0 1px 12px rgba(150, 80, 48, 0.06);
+    box-shadow: 0 2px 16px rgba(150, 80, 48, 0.08);
 }
 
 .nav-inner {
@@ -138,7 +148,8 @@ img { display: block; max-width: 100%; }
 /* ── Shared Footer ─────────────────────────────────── */
 .site-footer {
     background: var(--bg-dark);
-    border-top: 1px solid var(--gold-border);
+    border-top: 3px solid transparent;
+    border-image: linear-gradient(90deg, var(--gold-dim), var(--coral), var(--violet), var(--teal)) 1;
     padding: 20px 28px;
     text-align: center;
 }
@@ -148,6 +159,14 @@ img { display: block; max-width: 100%; }
     color: var(--text-muted);
     letter-spacing: 0.04em;
 }
+
+.footer-legal-link {
+    color: var(--gold);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--ease);
+}
+
+.footer-legal-link:hover { border-color: var(--gold); }
 
 /* ── Shared Button ─────────────────────────────────── */
 .btn-primary {
@@ -216,7 +235,7 @@ html.dark {
 
 html.dark .site-nav {
     background: #1a1006;
-    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.40);
 }
 
 html.dark .site-footer { background: #100a03; }

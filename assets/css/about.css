@@ -32,11 +32,11 @@ body { overflow-y: auto; }
 }
 
 .gold-rule {
-    width: 48px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    width: 64px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--coral));
     border: none;
-    border-radius: 2px;
+    border-radius: 3px;
     margin-bottom: 28px;
 }
 
@@ -141,23 +141,68 @@ body { overflow-y: auto; }
 .value-card {
     background: var(--bg-card);
     border: 1px solid var(--gold-border);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(150, 80, 48, 0.05);
+    border-radius: 14px;
+    padding: 28px 24px;
+    box-shadow: 0 2px 12px rgba(150, 80, 48, 0.06);
+    border-top: 3px solid var(--gold-border); /* overridden per card */
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(150, 80, 48, 0.12);
+}
+
+/* Accent top-border colours per value */
+.vc-clarity   { border-top-color: var(--teal); }
+.vc-warmth    { border-top-color: var(--coral); }
+.vc-excellence { border-top-color: var(--violet); }
+
+/* Icon circle */
+.vc-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.vc-clarity .vc-icon {
+    background: var(--teal-tint);
+    color: var(--teal);
+    border: 1px solid var(--teal-border);
+}
+
+.vc-warmth .vc-icon {
+    background: var(--coral-tint);
+    color: var(--coral);
+    border: 1px solid var(--coral-border);
+}
+
+.vc-excellence .vc-icon {
+    background: var(--violet-tint);
+    color: var(--violet);
+    border: 1px solid var(--violet-border);
 }
 
 .value-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
-    color: var(--gold);
+    color: var(--text);
     margin-bottom: 8px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
 }
 
+.vc-clarity   .value-title { color: var(--teal); }
+.vc-warmth    .value-title { color: var(--coral); }
+.vc-excellence .value-title { color: var(--violet); }
+
 .value-text {
-    font-size: 13px;
+    font-size: 13.5px;
     color: var(--text-dim);
-    line-height: 1.6;
+    line-height: 1.65;
 }
 
 /* ── Responsive ────────────────────────────────────── */
