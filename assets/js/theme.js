@@ -30,6 +30,11 @@
                 syncButtons();
             }
         });
+
+        // Background particles — stars (dark) / butterflies (light)
+        var bp = document.createElement('script');
+        bp.src = 'assets/js/bg-particles.js';
+        document.head.appendChild(bp);
     });
 
     if ('serviceWorker' in navigator) {

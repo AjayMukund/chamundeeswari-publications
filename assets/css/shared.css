@@ -221,6 +221,81 @@ html.dark .site-nav {
 
 html.dark .site-footer { background: #100a03; }
 
+/* ── Background Particles ───────────────────────────── */
+#bg-particles {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bgp {
+    position: absolute;
+    pointer-events: auto;
+    cursor: default;
+    user-select: none;
+    line-height: 0;
+    display: flex;
+}
+
+/* Content must sit above the particle layer */
+.about-wrap,
+#view-dashboard,
+.site-footer { position: relative; z-index: 2; }
+
+/* Stars — dark mode */
+.bgp-star {
+    color: #fcd060;
+    opacity: 0.35;
+    animation: bgp-twinkle 3.5s ease-in-out infinite;
+    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+    will-change: opacity, transform;
+}
+
+.bgp-star:hover {
+    opacity: 1;
+    transform: scale(1.55);
+    filter:
+        drop-shadow(0 0 3px #fff8c0)
+        drop-shadow(0 0 8px #fcd060)
+        drop-shadow(0 0 18px #c8763e)
+        drop-shadow(0 0 32px rgba(200, 118, 62, 0.5));
+    animation-play-state: paused;
+    z-index: 3;
+}
+
+@keyframes bgp-twinkle {
+    0%,  100% { opacity: 0.15; transform: scale(0.80); }
+    50%        { opacity: 0.58; transform: scale(1.14); }
+}
+
+/* Butterflies — light mode */
+.bgp-butterfly {
+    color: var(--gold);
+    opacity: 0.15;
+    animation: bgp-flutter 5s ease-in-out infinite;
+    transition: opacity 0.35s ease, filter 0.35s ease;
+    will-change: transform, opacity;
+    transform-origin: center;
+}
+
+.bgp-butterfly:hover {
+    opacity: 0.75;
+    filter:
+        drop-shadow(0 0 4px rgba(200, 118, 62, 0.95))
+        drop-shadow(0 0 12px rgba(200, 118, 62, 0.55))
+        drop-shadow(0 0 24px rgba(200, 118, 62, 0.25));
+    animation-play-state: paused;
+    z-index: 3;
+}
+
+@keyframes bgp-flutter {
+    0%,  100% { transform: rotate(-7deg) scale(1)    translateY(0px);  }
+    25%        { transform: rotate( 6deg) scale(1.07) translateY(-6px); }
+    75%        { transform: rotate(-3deg) scale(0.95) translateY( 4px); }
+}
+
 /* ── Reduced motion ────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
