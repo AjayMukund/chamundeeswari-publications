@@ -57,6 +57,17 @@ function createCard(book) {
 
     card.addEventListener('click', () => { App.openBook(book); });
 
+    if (book.purchaseUrl) {
+        const buyBtn = document.createElement('a');
+        buyBtn.className = 'btn-buy';
+        buyBtn.href      = book.purchaseUrl;
+        buyBtn.target    = '_blank';
+        buyBtn.rel       = 'noopener noreferrer';
+        buyBtn.textContent = 'Buy Book';
+        buyBtn.addEventListener('click', e => e.stopPropagation());
+        card.querySelector('.card-body').appendChild(buyBtn);
+    }
+
     const skel = card.querySelector(`#skel-${book.id}`);
 
     if (book.cover) {

@@ -12,7 +12,8 @@
       "pages": 33,
       "phonicsFocus": "M sounds · Short vowels · CVC words · AABB rhyme",
       "description": "Mango the monkey has plenty of mangoes but no friends — until a clumsy accident and a gentle bear change everything.",
-      "year": 2026
+      "year": 2026,
+      "purchaseUrl": ""
     },
     {
       "id": "pip-the-penguin",
@@ -25,7 +26,8 @@
       "pages": 33,
       "phonicsFocus": "P sounds · Short vowels · CVC words · AABB rhyme",
       "description": "Pip is nervous about his first day at school — but a new friend and a big warm smile make it the best day ever.",
-      "year": 2026
+      "year": 2026,
+      "purchaseUrl": ""
     },
     {
       "id": "luna-the-firefly",
@@ -38,7 +40,8 @@
       "pages": 33,
       "phonicsFocus": "L sounds · Short vowels · CVC words · AABB rhyme",
       "description": "Luna is the only firefly who can't glow — but a kind frog and one brave stormy night reveal that her light was inside her all along.",
-      "year": 2026
+      "year": 2026,
+      "purchaseUrl": ""
     }
   ]
 }

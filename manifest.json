@@ -1,0 +1,12 @@
+{
+    "name": "Chamundeeswari Publications",
+    "short_name": "CP Books",
+    "description": "Beautifully illustrated phonics readers for children aged 3–6.",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#fdf8f0",
+    "theme_color": "#c8763e",
+    "lang": "en",
+    "categories": ["education", "kids", "books"]
+}

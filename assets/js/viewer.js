@@ -267,6 +267,32 @@ function buildFlipBook(savedPage = 0) {
     });
 }
 
+/* ── Print current spread ──────────────────────────── */
+function printCurrentSpread() {
+    if (!flipBook) return;
+    const idx   = flipBook.getCurrentPageIndex() || 0;
+    const pages = _decor.mobile
+        ? [pageEls[idx]]
+        : [pageEls[idx], pageEls[idx + 1]].filter(Boolean);
+
+    const srcs = pages.map(p => p?.querySelector('img')?.src).filter(Boolean);
+    if (!srcs.length) return;
+
+    const win = window.open('', '_blank', 'width=960,height=720');
+    win.document.write(`<!DOCTYPE html><html><head>
+<title>Print</title>
+<style>
+    @page { margin: 0; size: landscape; }
+    body   { margin: 0; display: flex; justify-content: center; background: #fff; }
+    img    { max-width: ${srcs.length > 1 ? '50%' : '100%'}; max-height: 100vh; object-fit: contain; display: block; }
+</style>
+</head><body>${srcs.map(s => `<img src="${s}">`).join('')}</body></html>`);
+    win.document.close();
+    win.addEventListener('load', () => { win.focus(); win.print(); win.close(); });
+}
+
+$('btn-print').addEventListener('click', printCurrentSpread);
+
 /* ── Controls ──────────────────────────────────────── */
 const prev  = () => flipBook?.flipPrev();
 const next  = () => flipBook?.flipNext();
