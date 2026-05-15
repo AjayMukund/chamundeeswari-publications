@@ -256,13 +256,19 @@ window.addEventListener('wheel', e => {
     if (!flipBook) return;
     if (!document.body.classList.contains('view-viewer')) return;
 
-    const absX = Math.abs(e.deltaX);
-    const absY = Math.abs(e.deltaY);
-    if (absX < absY || absX < 3) return;   // vertical scroll — ignore
+    // Normalise to pixels (deltaMode 1 = lines ≈ 16px, 2 = page ≈ 600px)
+    const scale = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 600 : 1;
+    const dx    = e.deltaX * scale;
+    const dy    = e.deltaY * scale;
+    const absX  = Math.abs(dx);
+    const absY  = Math.abs(dy);
+
+    // Require clear horizontal intent: deltaX > 5px AND not dominated by vertical
+    if (absX < 5 || absY > absX * 1.5) return;
 
     e.preventDefault();
 
-    _wheelAccum += e.deltaX;
+    _wheelAccum += dx;
     clearTimeout(_wheelTimer);
     _wheelTimer = setTimeout(() => {
         _wheelAccum  = 0;

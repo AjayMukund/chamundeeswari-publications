@@ -202,15 +202,18 @@ async function openBook(book) {
 window.App = { getOrRender, openBook, showDashboard, showViewer };
 
 /* ── Initialise ────────────────────────────────────── */
+
+// Read deep-link param BEFORE showDashboard clears the query string
+const _deepLinkId = new URLSearchParams(location.search).get('book');
+
 showDashboard();
 
 /* ── Deep-link: auto-open book from ?book= URL param ── */
 (async () => {
-    const id = new URLSearchParams(location.search).get('book');
-    if (!id) return;
+    if (!_deepLinkId) return;
     try {
         const { books = [] } = await fetch('books/catalog.json').then(r => r.json());
-        const book = books.find(b => b.id === id);
+        const book = books.find(b => b.id === _deepLinkId);
         if (book) openBook(book);
     } catch (_) {}
 })();
