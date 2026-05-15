@@ -224,6 +224,8 @@ function calcDimensions() {
 function buildFlipBook(savedPage = 0) {
     _zoomOut();
     _buildNextPanel(_otherBooks);
+    _pendingFlip = null;
+    _flipping    = false;
     bookEl.innerHTML = '';
     pageEls.forEach(el => bookEl.appendChild(el));
 
@@ -260,17 +262,35 @@ function buildFlipBook(savedPage = 0) {
     _positionDecor(w, h, mobile);
 
     flipBook.on('flip', e => {
+        _flipping       = false;
         currentPage     = e.data;
         pageInput.value = currentPage + 1;
         playPageTurnSound();
         _updateStacks(currentPage, totalPages);
         _liveRegion.textContent = `Page ${currentPage + 1} of ${totalPages}`;
         if (bookId) localStorage.setItem('cp-progress-' + bookId, currentPage);
-        if (currentPage === totalPages - 1) {
-            window.plausible?.('Reading Completed', { props: { title: bookTitle } });
+
+        // In spread (desktop) mode PageFlip reports the LEFT page of the last
+        // two-page spread, which is totalPages-2, never totalPages-1.
+        const atEnd = _decor.mobile
+            ? currentPage >= totalPages - 1
+            : currentPage >= totalPages - 2;
+
+        if (atEnd) {
+            if (!_completedFired) {
+                _completedFired = true;
+                window.plausible?.('Reading Completed', { props: { title: bookTitle } });
+            }
             if (_otherBooks.length) setTimeout(() => _nextPanel.classList.add('visible'), 600);
         } else {
             _nextPanel.classList.remove('visible');
+        }
+
+        // Execute a flip that was queued during the animation (rapid swipe support)
+        if (_pendingFlip) {
+            const p = _pendingFlip;
+            _pendingFlip = null;
+            requestAnimationFrame(() => _execFlip(p));
         }
     });
 
@@ -307,8 +327,27 @@ function printCurrentSpread() {
 $('btn-print').addEventListener('click', printCurrentSpread);
 
 /* ── Controls ──────────────────────────────────────── */
-const prev  = () => flipBook?.flipPrev();
-const next  = () => flipBook?.flipNext();
+let _pendingFlip  = null;  // 'next' | 'prev' — queued during animation
+let _flipping     = false;
+let _completedFired = false;
+
+function _execFlip(dir) {
+    if (!flipBook) return;
+    _flipping = true;
+    if (dir === 'next') flipBook.flipNext();
+    else               flipBook.flipPrev();
+}
+
+const next  = () => {
+    if (!flipBook) return;
+    if (_flipping) { _pendingFlip = 'next'; }
+    else           { _pendingFlip = null; _execFlip('next'); }
+};
+const prev  = () => {
+    if (!flipBook) return;
+    if (_flipping) { _pendingFlip = 'prev'; }
+    else           { _pendingFlip = null; _execFlip('prev'); }
+};
 const first = () => { currentPage = 0; flipBook?.flip(0); };
 const last  = () => { if (flipBook) { currentPage = totalPages - 1; flipBook.flip(currentPage); } };
 const goto  = p => { if (p >= 1 && p <= totalPages) { currentPage = p - 1; flipBook?.flip(currentPage); } };
@@ -438,11 +477,12 @@ window.addEventListener('resize', () => {
 /* ── Public API (called by app.js) ─────────────────── */
 window.Viewer = {
     build(els, savedPage = 0, id = null, otherBooks = [], title = null) {
-        pageEls      = els;
-        currentPage  = savedPage;
-        bookId       = id;
-        bookTitle    = title;
-        _otherBooks  = otherBooks;
+        pageEls         = els;
+        currentPage     = savedPage;
+        bookId          = id;
+        bookTitle       = title;
+        _otherBooks     = otherBooks;
+        _completedFired = false;
         buildFlipBook(savedPage);
     }
 };
