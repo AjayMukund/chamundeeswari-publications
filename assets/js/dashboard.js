@@ -32,8 +32,13 @@ async function extractCoverFromPdf(pdfUrl, cacheKey) {
 function createCard(book) {
     const card = document.createElement('div');
     card.className = 'book-card';
+    card.dataset.series = book.series;
+
+    const isNew = book.year >= new Date().getFullYear();
+
     card.innerHTML = `
         <div class="card-cover">
+            ${isNew ? '<span class="badge-new">New</span>' : ''}
             <div class="cover-skeleton" id="skel-${book.id}"></div>
             <div class="card-overlay">
                 <button class="overlay-btn">Open Book</button>
@@ -55,7 +60,6 @@ function createCard(book) {
     const skel = card.querySelector(`#skel-${book.id}`);
 
     if (book.cover) {
-        // Static image — instant load, no PDF.js needed
         const img = document.createElement('img');
         img.src   = book.cover;
         img.alt   = book.title;
@@ -63,7 +67,6 @@ function createCard(book) {
         img.onerror = () => extractCoverFromPdf(book.file, `cover_${book.id}`)
                                .then(url => { if (url) { img.src = url; skel.replaceWith(img); } });
     } else {
-        // Fallback: render page 1 from PDF
         extractCoverFromPdf(book.file, `cover_${book.id}`).then(url => {
             if (!url) return;
             const img = document.createElement('img');
@@ -74,6 +77,37 @@ function createCard(book) {
     }
 
     return card;
+}
+
+/* ── Series filter pills ───────────────────────────── */
+function buildFilters(books) {
+    const filtersEl = document.getElementById('library-filters');
+    if (!filtersEl) return;
+
+    const seriesList = [...new Set(books.map(b => b.series))];
+    if (seriesList.length < 2) return;   // no point filtering with only 1 series
+
+    filtersEl.hidden = false;
+    let active = 'All';
+
+    function render() {
+        filtersEl.innerHTML = '';
+        ['All', ...seriesList].forEach(s => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-pill' + (s === active ? ' active' : '');
+            btn.textContent = s;
+            btn.addEventListener('click', () => {
+                active = s;
+                render();
+                document.querySelectorAll('.book-card').forEach(card => {
+                    card.hidden = s !== 'All' && card.dataset.series !== s;
+                });
+            });
+            filtersEl.appendChild(btn);
+        });
+    }
+
+    render();
 }
 
 /* ── Boot ──────────────────────────────────────────── */
@@ -91,6 +125,8 @@ function createCard(book) {
         }
 
         books.forEach(book => grid.appendChild(createCard(book)));
+        App.setCatalog(books);
+        buildFilters(books);
 
     } catch (err) {
         grid.innerHTML = '<p class="empty-state">Could not load the library. Please refresh.</p>';

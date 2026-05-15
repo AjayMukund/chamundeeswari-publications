@@ -374,7 +374,7 @@ body.view-viewer .site-nav .nav-book-title {
 .viewer-footer {
     background: var(--bg-dark);
     border-top: 1px solid var(--gold-border);
-    padding: 8px 20px;
+    padding: 6px 20px;
     text-align: center;
     flex-shrink: 0;
     transition: all 0.3s ease;
@@ -384,6 +384,94 @@ body.view-viewer .site-nav .nav-book-title {
     font-size: 10px;
     color: var(--text-muted);
     letter-spacing: 0.04em;
+}
+
+.viewer-phonics:not(:empty) {
+    color: var(--gold-dim);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+/* ── Next-book suggestion panel ────────────────────── */
+.next-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(253, 248, 240, 0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--gold-border);
+    padding: 18px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    z-index: 30;
+    transform: translateY(101%);
+    transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+}
+
+.next-panel.visible {
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.next-panel-heading {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.next-panel-books {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.next-book-card {
+    width: 76px;
+    background: var(--bg-card);
+    border: 1px solid var(--gold-border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all var(--ease);
+    padding: 0;
+}
+
+.next-book-card img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+}
+
+.next-book-card span {
+    font-size: 9px;
+    color: var(--text-dim);
+    padding: 5px 5px;
+    text-align: center;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+.next-book-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(150, 80, 48, 0.15);
+}
+
+.next-panel-lib-btn {
+    font-size: 11px;
+    padding: 7px 18px;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -445,6 +533,7 @@ html.dark #book {
 }
 
 html.dark .viewer-footer { background: #100a03; }
+html.dark .next-panel    { background: rgba(26, 16, 6, 0.97); }
 
 html.dark body.is-fullscreen .toolbar {
     background: rgba(26, 16, 6, 0.94);

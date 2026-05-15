@@ -13,6 +13,9 @@ const _pageCache     = new Map();  // bookId → pageEls[]
 const _promiseCache  = new Map();  // bookId → Promise<pageEls[]>
 const _progressState = new Map();  // bookId → { current, total, listeners[] }
 
+/* ── Catalog (set by dashboard.js after fetch) ──────── */
+let _catalog = [];
+
 /* ── DOM refs ──────────────────────────────────────── */
 const viewDashboard  = document.getElementById('view-dashboard');
 const viewViewer     = document.getElementById('view-viewer');
@@ -182,8 +185,11 @@ async function openBook(book) {
             await new Promise(r => setTimeout(r, 220));
         }
 
-        const savedPage = Math.max(0, parseInt(localStorage.getItem('cp-progress-' + book.id) || '0', 10));
-        Viewer.build(pageEls, savedPage, book.id);
+        const savedPage  = Math.max(0, parseInt(localStorage.getItem('cp-progress-' + book.id) || '0', 10));
+        const otherBooks = _catalog.filter(b => b.id !== book.id);
+        const phonicsEl  = document.getElementById('viewer-phonics');
+        if (phonicsEl) phonicsEl.textContent = book.phonicsFocus || '';
+        Viewer.build(pageEls, savedPage, book.id, otherBooks);
 
         viewerLoading.classList.add('fade-out');
         setTimeout(() => {
@@ -199,7 +205,8 @@ async function openBook(book) {
 }
 
 /* ── Public API ────────────────────────────────────── */
-window.App = { getOrRender, openBook, showDashboard, showViewer };
+function setCatalog(books) { _catalog = books; }
+window.App = { getOrRender, openBook, showDashboard, showViewer, setCatalog };
 
 /* ── Initialise ────────────────────────────────────── */
 

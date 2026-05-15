@@ -67,6 +67,40 @@ body { overflow-y: auto; }
     color: var(--text-muted);
 }
 
+/* ── Filter Pills ──────────────────────────────────── */
+.library-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+
+.filter-pill {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--gold-border);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all var(--ease);
+    letter-spacing: 0.03em;
+}
+
+.filter-pill:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-glow);
+}
+
+.filter-pill.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #ffffff;
+}
+
 /* ── Books Grid ────────────────────────────────────── */
 .books-grid {
     display: grid;
@@ -92,6 +126,23 @@ body { overflow-y: auto; }
     border-color: var(--gold);
     transform: translateY(-4px);
     box-shadow: 0 12px 32px rgba(150, 80, 48, 0.14), 0 0 0 1px var(--gold-border);
+}
+
+/* ── New Badge ─────────────────────────────────────── */
+.badge-new {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    background: var(--gold);
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    pointer-events: none;
 }
 
 /* Cover image */
@@ -230,6 +281,10 @@ body { overflow-y: auto; }
 }
 
 /* ── Dark Mode ─────────────────────────────────────── */
+html.dark .filter-pill        { border-color: var(--gold-border); }
+html.dark .filter-pill:hover  { background: var(--gold-glow); }
+html.dark .filter-pill.active { background: var(--gold); color: #fff; }
+
 html.dark .hero {
     background: linear-gradient(180deg, #2a1a08 0%, var(--bg-deep) 100%);
 }

@@ -10,6 +10,7 @@ let currentPage = 0;
 let totalPages  = 0;
 let soundOn     = true;
 let bookId      = null;
+let _otherBooks = [];
 
 /* ── DOM refs ──────────────────────────────────────── */
 const $            = id => document.getElementById(id);
@@ -52,6 +53,7 @@ function _zoomIn(e) {
     bookStage.style.transformOrigin = `${ox}% ${oy}%`;
     bookStage.style.transform       = 'scale(1.9)';
     _zoomOverlay.style.display      = 'block';
+    _nextPanel.classList.remove('visible');
     _zoomed = true;
 }
 
@@ -60,6 +62,53 @@ function _zoomOut() {
     bookStage.style.transformOrigin = '';
     _zoomOverlay.style.display      = 'none';
     _zoomed = false;
+}
+
+/* ── Next-book suggestion panel ────────────────────── */
+const _nextPanel = document.createElement('div');
+_nextPanel.className = 'next-panel';
+_nextPanel.setAttribute('aria-hidden', 'true');
+document.getElementById('viewer').appendChild(_nextPanel);
+
+function _buildNextPanel(books) {
+    _nextPanel.innerHTML = '';
+    _nextPanel.classList.remove('visible');
+    if (!books.length) return;
+
+    const heading = document.createElement('p');
+    heading.className = 'next-panel-heading';
+    heading.textContent = 'Keep reading';
+    _nextPanel.appendChild(heading);
+
+    const booksRow = document.createElement('div');
+    booksRow.className = 'next-panel-books';
+    books.slice(0, 3).forEach(b => {
+        const btn = document.createElement('button');
+        btn.className = 'next-book-card';
+        if (b.cover) {
+            const img = document.createElement('img');
+            img.src = b.cover;
+            img.alt = b.title;
+            btn.appendChild(img);
+        }
+        const label = document.createElement('span');
+        label.textContent = b.title;
+        btn.appendChild(label);
+        btn.addEventListener('click', () => App.openBook(b));
+        booksRow.appendChild(btn);
+    });
+    _nextPanel.appendChild(booksRow);
+
+    const libBtn = document.createElement('button');
+    libBtn.className = 'btn-primary next-panel-lib-btn';
+    libBtn.textContent = 'Browse Library';
+    libBtn.addEventListener('click', () => {
+        if (document.fullscreenElement) document.exitFullscreen();
+        flipBook = null;
+        pageEls  = [];
+        App.showDashboard();
+    });
+    _nextPanel.appendChild(libBtn);
 }
 
 /* ── Decoration state ──────────────────────────────── */
@@ -164,6 +213,7 @@ function calcDimensions() {
 /* ── Build (or rebuild) the flip book ───────────────── */
 function buildFlipBook(savedPage = 0) {
     _zoomOut();
+    _buildNextPanel(_otherBooks);
     bookEl.innerHTML = '';
     pageEls.forEach(el => bookEl.appendChild(el));
 
@@ -205,6 +255,11 @@ function buildFlipBook(savedPage = 0) {
         playPageTurnSound();
         _updateStacks(currentPage, totalPages);
         if (bookId) localStorage.setItem('cp-progress-' + bookId, currentPage);
+        if (currentPage === totalPages - 1 && _otherBooks.length) {
+            setTimeout(() => _nextPanel.classList.add('visible'), 600);
+        } else {
+            _nextPanel.classList.remove('visible');
+        }
     });
 
     flipBook.on('changeState', () => {
@@ -338,10 +393,11 @@ window.addEventListener('resize', () => {
 
 /* ── Public API (called by app.js) ─────────────────── */
 window.Viewer = {
-    build(els, savedPage = 0, id = null) {
-        pageEls     = els;
-        currentPage = savedPage;
-        bookId      = id;
+    build(els, savedPage = 0, id = null, otherBooks = []) {
+        pageEls      = els;
+        currentPage  = savedPage;
+        bookId       = id;
+        _otherBooks  = otherBooks;
         buildFlipBook(savedPage);
     }
 };
