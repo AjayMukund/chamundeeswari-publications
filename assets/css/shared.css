@@ -244,56 +244,170 @@ html.dark .site-footer { background: #100a03; }
 #view-dashboard,
 .site-footer { position: relative; z-index: 2; }
 
-/* Stars — dark mode */
-.bgp-star {
+/* ── Stars — dark mode ── */
+
+/* 5-pointed star — warm gold, multi-flicker twinkle */
+.bgp-star5 {
     color: #fcd060;
-    opacity: 0.35;
-    animation: bgp-twinkle 3.5s ease-in-out infinite;
-    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+    opacity: 0.32;
+    animation: bgp-twinkle5 4s ease-in-out infinite;
+    transition: opacity 0.25s ease, filter 0.25s ease, transform 0.25s ease;
     will-change: opacity, transform;
 }
 
-.bgp-star:hover {
+.bgp-star5:hover {
     opacity: 1;
-    transform: scale(1.55);
+    transform: scale(1.6);
     filter:
         drop-shadow(0 0 3px #fff8c0)
-        drop-shadow(0 0 8px #fcd060)
-        drop-shadow(0 0 18px #c8763e)
-        drop-shadow(0 0 32px rgba(200, 118, 62, 0.5));
+        drop-shadow(0 0 9px #fcd060)
+        drop-shadow(0 0 20px #c8763e)
+        drop-shadow(0 0 36px rgba(200, 118, 62, 0.55));
     animation-play-state: paused;
     z-index: 3;
 }
 
-@keyframes bgp-twinkle {
-    0%,  100% { opacity: 0.15; transform: scale(0.80); }
-    50%        { opacity: 0.58; transform: scale(1.14); }
+@keyframes bgp-twinkle5 {
+    0%          { opacity: 0.10; transform: scale(0.72); }
+    18%         { opacity: 0.52; transform: scale(1.10); }
+    35%         { opacity: 0.18; transform: scale(0.82); }
+    55%         { opacity: 0.64; transform: scale(1.18); }
+    72%         { opacity: 0.14; transform: scale(0.76); }
+    88%         { opacity: 0.44; transform: scale(1.06); }
+    100%        { opacity: 0.10; transform: scale(0.72); }
 }
 
-/* Butterflies — light mode */
+/* 4-pointed sparkle — near-white, slow rotation + pulse */
+.bgp-star4 {
+    color: #fff8e0;
+    opacity: 0.28;
+    animation: bgp-twinkle4 5.5s ease-in-out infinite;
+    transition: opacity 0.25s ease, filter 0.25s ease, transform 0.25s ease;
+    will-change: opacity, transform;
+}
+
+.bgp-star4:hover {
+    opacity: 1;
+    transform: scale(1.5) rotate(45deg);
+    filter:
+        drop-shadow(0 0 4px #ffffff)
+        drop-shadow(0 0 10px #fcd060)
+        drop-shadow(0 0 22px #c8763e)
+        drop-shadow(0 0 40px rgba(200, 118, 62, 0.45));
+    animation-play-state: paused;
+    z-index: 3;
+}
+
+@keyframes bgp-twinkle4 {
+    0%   { opacity: 0.08; transform: scale(0.78) rotate(0deg);   }
+    30%  { opacity: 0.50; transform: scale(1.15) rotate(22deg);  }
+    60%  { opacity: 0.12; transform: scale(0.84) rotate(45deg);  }
+    85%  { opacity: 0.42; transform: scale(1.08) rotate(34deg);  }
+    100% { opacity: 0.08; transform: scale(0.78) rotate(0deg);   }
+}
+
+/* Dot — pale amber, soft breathe */
+.bgp-dot {
+    color: #ffe8a0;
+    opacity: 0.22;
+    animation: bgp-dotpulse 3s ease-in-out infinite;
+    transition: opacity 0.25s ease, filter 0.25s ease, transform 0.25s ease;
+    will-change: opacity, transform;
+}
+
+.bgp-dot:hover {
+    opacity: 1;
+    transform: scale(2.2);
+    filter:
+        drop-shadow(0 0 3px #fff4b0)
+        drop-shadow(0 0 8px #fcd060)
+        drop-shadow(0 0 16px rgba(200, 118, 62, 0.6));
+    animation-play-state: paused;
+    z-index: 3;
+}
+
+@keyframes bgp-dotpulse {
+    0%,  100% { opacity: 0.08; transform: scale(0.65); }
+    50%        { opacity: 0.40; transform: scale(1.20); }
+}
+
+/* ── Butterflies — light mode ── */
+
+/* Outer wrapper: gentle floating drift */
 .bgp-butterfly {
+    position: absolute;
     color: var(--gold);
-    opacity: 0.15;
-    animation: bgp-flutter 5s ease-in-out infinite;
+    opacity: 0.14;
+    animation: bgp-bfly-drift 9s ease-in-out infinite;
     transition: opacity 0.35s ease, filter 0.35s ease;
     will-change: transform, opacity;
-    transform-origin: center;
 }
 
 .bgp-butterfly:hover {
-    opacity: 0.75;
+    opacity: 0.80;
     filter:
-        drop-shadow(0 0 4px rgba(200, 118, 62, 0.95))
-        drop-shadow(0 0 12px rgba(200, 118, 62, 0.55))
-        drop-shadow(0 0 24px rgba(200, 118, 62, 0.25));
+        drop-shadow(0 0 5px rgba(200, 118, 62, 1.00))
+        drop-shadow(0 0 14px rgba(200, 118, 62, 0.65))
+        drop-shadow(0 0 28px rgba(200, 118, 62, 0.30));
     animation-play-state: paused;
     z-index: 3;
 }
 
-@keyframes bgp-flutter {
-    0%,  100% { transform: rotate(-7deg) scale(1)    translateY(0px);  }
-    25%        { transform: rotate( 6deg) scale(1.07) translateY(-6px); }
-    75%        { transform: rotate(-3deg) scale(0.95) translateY( 4px); }
+.bgp-butterfly:hover .bfly-l,
+.bgp-butterfly:hover .bfly-r {
+    animation-play-state: paused;
+}
+
+@keyframes bgp-bfly-drift {
+    0%   { transform: translate(0px,   0px)  rotate(-5deg) scale(1.00); }
+    20%  { transform: translate(6px,  -9px)  rotate( 4deg) scale(1.05); }
+    40%  { transform: translate(-4px, -5px)  rotate(-3deg) scale(0.97); }
+    60%  { transform: translate(8px,  -12px) rotate( 6deg) scale(1.04); }
+    80%  { transform: translate(-6px,  3px)  rotate(-4deg) scale(0.98); }
+    100% { transform: translate(0px,   0px)  rotate(-5deg) scale(1.00); }
+}
+
+/* Wing halves — positioned relative to butterfly wrapper */
+.bfly-l,
+.bfly-r {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+}
+
+/* Left wing folds toward center (right edge is the body join) */
+.bfly-l {
+    right: 50%;
+    transform-origin: 100% 50%;
+    animation: bfly-fold 0.55s ease-in-out infinite alternate;
+}
+
+/* Right wing folds toward center (left edge is the body join) */
+.bfly-r {
+    left: 50%;
+    transform-origin: 0% 50%;
+    animation: bfly-fold 0.55s ease-in-out infinite alternate;
+}
+
+@keyframes bfly-fold {
+    from { transform: scaleX(1);    }
+    to   { transform: scaleX(0.07); }
+}
+
+/* Body overlay — centered over the join line */
+.bfly-body {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    pointer-events: none;
 }
 
 /* ── Reduced motion ────────────────────────────────── */
