@@ -1,0 +1,374 @@
+/* ═══════════════════════════════════════════════════════
+   Chamundeeswari Publications — Contact Page
+   contact.css
+═══════════════════════════════════════════════════════ */
+
+/* ── Page header ───────────────────────────────────── */
+.contact-header {
+    margin-bottom: 48px;
+}
+
+.contact-hero-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 560px;
+    margin-top: -8px;
+}
+
+/* ── Two-column grid ───────────────────────────────── */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    align-items: start;
+}
+
+/* ── Contact detail items ──────────────────────────── */
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.cit {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.cion {
+    width: 36px;
+    height: 36px;
+    background: rgba(200, 118, 62, 0.08);
+    border: 1px solid var(--gold-border);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.cilbl {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3px;
+}
+
+.cival {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.civ-link {
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--ease);
+}
+
+.civ-link:hover { border-color: var(--gold); }
+
+/* ── Email CTA button ──────────────────────────────── */
+.email-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: rgba(200, 118, 62, 0.08);
+    border: 1px solid var(--gold-border);
+    color: var(--gold);
+    border-radius: 9px;
+    padding: 12px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    transition: all var(--ease);
+    margin-top: 4px;
+}
+
+.email-cta-btn:hover {
+    background: rgba(200, 118, 62, 0.15);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(200, 118, 62, 0.18);
+}
+
+/* ── Response time badge ───────────────────────────── */
+.resp-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e7a44;
+    background: rgba(30, 140, 80, 0.07);
+    border: 1px solid rgba(30, 140, 80, 0.28);
+    border-radius: 10px;
+    padding: 12px 16px;
+    animation: resp-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes resp-pulse {
+    0%,  100% { box-shadow: 0 0 0 0 rgba(30, 140, 80, 0.14);  border-color: rgba(30, 140, 80, 0.28); }
+    50%        { box-shadow: 0 0 14px 4px rgba(30, 140, 80, 0.10); border-color: rgba(30, 140, 80, 0.52); }
+}
+
+.resp-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #1e7a44;
+    flex-shrink: 0;
+    animation: rdot 2s ease-in-out infinite;
+}
+
+@keyframes rdot {
+    0%, 100% { opacity: 1;    transform: scale(1);    }
+    50%       { opacity: 0.4; transform: scale(1.55); }
+}
+
+/* ── FAQ ───────────────────────────────────────────── */
+.contact-faq {
+    margin-bottom: 32px;
+}
+
+.cfaq-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.cfaq-item {
+    border: 1px solid var(--gold-border);
+    border-radius: 9px;
+    overflow: hidden;
+    margin-bottom: 7px;
+    background: var(--bg-card);
+}
+
+.cfaq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 13px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    gap: 12px;
+    transition: color var(--ease);
+}
+
+.cfaq-q:hover { color: var(--gold); }
+
+.cfaq-icon {
+    color: var(--gold);
+    font-size: 18px;
+    font-weight: 300;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: transform 0.25s ease;
+}
+
+.cfaq-item.open .cfaq-icon { transform: rotate(45deg); }
+
+.cfaq-a {
+    display: none;
+    padding: 12px 16px 14px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    border-top: 1px solid var(--gold-border);
+}
+
+.cfaq-item.open .cfaq-a { display: block; }
+
+/* ── Form ──────────────────────────────────────────── */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--gold-border);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    transition: border-color var(--ease), box-shadow var(--ease);
+    outline: none;
+    appearance: none;
+}
+
+.form-input::placeholder { color: var(--text-muted); }
+
+.form-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200, 118, 62, 0.12);
+}
+
+.form-input.invalid {
+    border-color: rgba(200, 50, 50, 0.5);
+    background: rgba(200, 50, 50, 0.03);
+}
+
+.form-input.valid { border-color: rgba(30, 140, 80, 0.40); }
+
+.form-textarea {
+    resize: vertical;
+    min-height: 118px;
+    line-height: 1.6;
+}
+
+/* ── Validation errors ─────────────────────────────── */
+.field-err {
+    display: none;
+    font-size: 11.5px;
+    color: #b83020;
+}
+
+.field-err.show { display: block; }
+
+/* ── Error banner ──────────────────────────────────── */
+.form-error-banner {
+    background: rgba(180, 50, 50, 0.06);
+    border: 1px solid rgba(180, 50, 50, 0.22);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #b83020;
+    line-height: 1.55;
+}
+
+/* ── Submit button ─────────────────────────────────── */
+.form-submit {
+    align-self: flex-start;
+    padding: 11px 26px;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--ease);
+}
+
+.form-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(200, 118, 62, 0.28);
+}
+
+.form-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ── Success state ─────────────────────────────────── */
+.form-success {
+    text-align: center;
+    padding: 48px 24px;
+}
+
+.form-success-icon {
+    color: var(--gold);
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: center;
+}
+
+.form-success-title {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: 0.04em;
+}
+
+.form-success-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ── Dark mode ─────────────────────────────────────── */
+html.dark .cion     { background: rgba(200, 118, 62, 0.12); }
+html.dark .cfaq-item { background: var(--bg-card); }
+html.dark .form-input { background: var(--bg-card); color: var(--text); }
+
+html.dark .resp-badge {
+    color: #5dba7d;
+    background: rgba(60, 180, 100, 0.09);
+    border-color: rgba(60, 180, 100, 0.28);
+}
+html.dark .resp-dot { background: #5dba7d; }
+
+html.dark .field-err { color: #e07070; }
+html.dark .form-error-banner {
+    color: #e07070;
+    background: rgba(180, 50, 50, 0.09);
+    border-color: rgba(180, 50, 50, 0.28);
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 760px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .form-row     { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+    .contact-details { gap: 16px; }
+    .form-submit { width: 100%; text-align: center; align-self: stretch; }
+}
