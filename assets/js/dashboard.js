@@ -70,16 +70,28 @@ function createCard(book) {
     card.addEventListener('mouseleave', () => clearTimeout(_preRenderTimer));
     card.addEventListener('focusin', () => App.getOrRender(book), { once: true });
 
+    /* Price badge — shown even when purchaseUrl isn't set yet */
+    if (book.price) {
+        const symbol = book.currency === 'INR' ? '₹' : '';
+        const priceBadge = document.createElement('span');
+        priceBadge.className = 'badge badge-price';
+        priceBadge.textContent = `${symbol}${book.price}`;
+        card.querySelector('.card-badges').appendChild(priceBadge);
+    }
+
     if (book.purchaseUrl) {
-        const buyBtn = document.createElement('a');
+        const symbol  = book.currency === 'INR' ? '₹' : '';
+        const label   = book.price ? `Buy  ${symbol}${book.price}` : 'Buy Book';
+        const buyBtn  = document.createElement('a');
         buyBtn.className = 'btn-buy';
         buyBtn.href      = book.purchaseUrl;
         buyBtn.target    = '_blank';
         buyBtn.rel       = 'noopener noreferrer';
-        buyBtn.textContent = 'Buy Book';
+        buyBtn.setAttribute('aria-label', `Buy ${book.title} for ${symbol}${book.price}`);
+        buyBtn.textContent = label;
         buyBtn.addEventListener('click', e => {
             e.stopPropagation();
-            window.plausible?.('Buy Link', { props: { title: book.title } });
+            window.plausible?.('Buy Link', { props: { title: book.title, price: book.price } });
         });
         card.querySelector('.card-body').appendChild(buyBtn);
     }

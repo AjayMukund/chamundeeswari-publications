@@ -276,6 +276,21 @@ body { overflow-y: auto; }
     border: 1px solid rgba(100, 140, 130, 0.22);
 }
 
+.badge-price {
+    background: rgba(34, 120, 60, 0.10);
+    color: #1a6e32;
+    border: 1px solid rgba(34, 120, 60, 0.25);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-left: auto;
+}
+
+html.dark .badge-price {
+    background: rgba(60, 180, 100, 0.12);
+    color: #5dba7d;
+    border-color: rgba(60, 180, 100, 0.28);
+}
+
 /* ── Buy Button ────────────────────────────────────── */
 .btn-buy {
     display: inline-block;

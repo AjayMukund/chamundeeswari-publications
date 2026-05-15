@@ -106,6 +106,16 @@ for ($i = 0; $i -lt $books.Count; $i++) {
         Warn 'No cover set - page 1 of the PDF will be used as fallback'
     }
 
+    # price - if set, must be a positive number
+    if ($null -ne $book.price) {
+        if (-not ($book.price -is [int]) -or $book.price -lt 1) {
+            Fail ('"price" must be a positive integer (got ' + $book.price + ')')
+        } else {
+            $sym = if ($book.currency -eq 'INR') { 'Rs.' } else { '' }
+            Pass ('price: ' + $sym + $book.price)
+        }
+    }
+
     # purchaseUrl - if non-empty, must be a valid URL
     if (-not [string]::IsNullOrWhiteSpace($book.purchaseUrl)) {
         try {
