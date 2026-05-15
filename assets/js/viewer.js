@@ -9,6 +9,7 @@ let pageEls     = [];
 let currentPage = 0;
 let totalPages  = 0;
 let soundOn     = true;
+let bookId      = null;
 
 /* ── DOM refs ──────────────────────────────────────── */
 const $            = id => document.getElementById(id);
@@ -35,6 +36,31 @@ _stackLeft.className = 'page-stack stack-left';
 _stackLeft.setAttribute('aria-hidden', 'true');
 _stackLeft.hidden    = true;
 bookStage.appendChild(_stackLeft);
+
+/* ── Zoom overlay ──────────────────────────────────── */
+let _zoomed = false;
+
+const _zoomOverlay = document.createElement('div');
+_zoomOverlay.style.cssText = 'position:absolute;inset:0;z-index:15;cursor:zoom-out;display:none;';
+_zoomOverlay.setAttribute('aria-hidden', 'true');
+bookStage.appendChild(_zoomOverlay);
+
+function _zoomIn(e) {
+    const rect = bookStage.getBoundingClientRect();
+    const ox   = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1);
+    const oy   = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
+    bookStage.style.transformOrigin = `${ox}% ${oy}%`;
+    bookStage.style.transform       = 'scale(1.9)';
+    _zoomOverlay.style.display      = 'block';
+    _zoomed = true;
+}
+
+function _zoomOut() {
+    bookStage.style.transform       = '';
+    bookStage.style.transformOrigin = '';
+    _zoomOverlay.style.display      = 'none';
+    _zoomed = false;
+}
 
 /* ── Decoration state ──────────────────────────────── */
 const _decor = {};
@@ -137,6 +163,7 @@ function calcDimensions() {
 
 /* ── Build (or rebuild) the flip book ───────────────── */
 function buildFlipBook(savedPage = 0) {
+    _zoomOut();
     bookEl.innerHTML = '';
     pageEls.forEach(el => bookEl.appendChild(el));
 
@@ -177,6 +204,7 @@ function buildFlipBook(savedPage = 0) {
         pageInput.value = currentPage + 1;
         playPageTurnSound();
         _updateStacks(currentPage, totalPages);
+        if (bookId) localStorage.setItem('cp-progress-' + bookId, currentPage);
     });
 
     flipBook.on('changeState', () => {
@@ -210,6 +238,14 @@ document.addEventListener('keydown', e => {
     if (e.key === 'End')  last();
     if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen();
 });
+
+/* ── Zoom: double-click to zoom in, click to zoom out ── */
+bookStage.addEventListener('dblclick', e => {
+    if (!flipBook || _zoomed) return;
+    _zoomIn(e);
+});
+
+_zoomOverlay.addEventListener('click', _zoomOut);
 
 /* ── Touchpad horizontal swipe ─────────────────────── */
 let _wheelAccum  = 0;
@@ -296,9 +332,10 @@ window.addEventListener('resize', () => {
 
 /* ── Public API (called by app.js) ─────────────────── */
 window.Viewer = {
-    build(els) {
+    build(els, savedPage = 0, id = null) {
         pageEls     = els;
-        currentPage = 0;
-        buildFlipBook(0);
+        currentPage = savedPage;
+        bookId      = id;
+        buildFlipBook(savedPage);
     }
 };

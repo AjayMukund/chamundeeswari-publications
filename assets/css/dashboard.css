@@ -229,6 +229,16 @@ body { overflow-y: auto; }
     font-size: 14px;
 }
 
+/* ── Dark Mode ─────────────────────────────────────── */
+html.dark .hero {
+    background: linear-gradient(180deg, #2a1a08 0%, var(--bg-deep) 100%);
+}
+
+html.dark .cover-skeleton {
+    background: linear-gradient(90deg, #2a1808 25%, #331e0a 50%, #2a1808 75%);
+    background-size: 200% 100%;
+}
+
 /* ── Responsive ────────────────────────────────────── */
 @media (max-width: 600px) {
     .hero { padding: 40px 20px 32px; }

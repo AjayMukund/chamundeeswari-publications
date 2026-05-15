@@ -114,6 +114,7 @@ function showDashboard() {
     document.body.classList.remove('view-viewer');
     document.body.classList.add('view-dashboard');
     document.title = 'Chamundeeswari Publications';
+    history.replaceState({}, '', location.pathname);
 }
 
 /* ── View: Viewer ──────────────────────────────────── */
@@ -129,6 +130,7 @@ function showViewer() {
 /* ── Open a book ───────────────────────────────────── */
 async function openBook(book) {
     showViewer();
+    history.replaceState({}, '', '?book=' + book.id);
 
     viewerLoading.hidden   = false;
     loaderBar.style.width  = '0%';
@@ -180,7 +182,8 @@ async function openBook(book) {
             await new Promise(r => setTimeout(r, 220));
         }
 
-        Viewer.build(pageEls);
+        const savedPage = Math.max(0, parseInt(localStorage.getItem('cp-progress-' + book.id) || '0', 10));
+        Viewer.build(pageEls, savedPage, book.id);
 
         viewerLoading.classList.add('fade-out');
         setTimeout(() => {
@@ -200,3 +203,14 @@ window.App = { getOrRender, openBook, showDashboard, showViewer };
 
 /* ── Initialise ────────────────────────────────────── */
 showDashboard();
+
+/* ── Deep-link: auto-open book from ?book= URL param ── */
+(async () => {
+    const id = new URLSearchParams(location.search).get('book');
+    if (!id) return;
+    try {
+        const { books = [] } = await fetch('books/catalog.json').then(r => r.json());
+        const book = books.find(b => b.id === id);
+        if (book) openBook(book);
+    } catch (_) {}
+})();

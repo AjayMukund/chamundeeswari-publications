@@ -175,6 +175,28 @@ img { display: block; max-width: 100%; }
     border-color: var(--gold-dim);
 }
 
+/* ── Dark Mode ─────────────────────────────────────── */
+html.dark {
+    color-scheme: dark;
+    --bg-deep:     #1a1006;
+    --bg-dark:     #100a03;
+    --bg-card:     #231708;
+    --bg-card-h:   #2d1f0c;
+    --text:        #ece0cc;
+    --text-dim:    #c09468;
+    --text-muted:  #7a5840;
+    --gold-border: rgba(200, 118, 62, 0.32);
+    --gold-glow:   rgba(200, 118, 62, 0.15);
+    --toolbar-bg:  rgba(26, 16, 6, 0.96);
+}
+
+html.dark .site-nav {
+    background: #1a1006;
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+html.dark .site-footer { background: #100a03; }
+
 /* ── Responsive ────────────────────────────────────── */
 @media (max-width: 600px) {
     .nav-pub-tagline { display: none; }
