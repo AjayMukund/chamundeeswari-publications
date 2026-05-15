@@ -54,6 +54,8 @@ Open `books/catalog.json` and add a new object to the `"books"` array:
   "phonicsFocus":"S sounds · Short vowels · CVC words · AABB rhyme",
   "description": "One or two sentences describing the story.",
   "year":        2026,
+  "price":       149,
+  "currency":    "INR",
   "purchaseUrl": ""
 }
 ```
@@ -96,7 +98,9 @@ GitHub Pages rebuilds automatically — the book will be live within a minute.
 | `phonicsFocus` |          | string  | Shown in the viewer footer, e.g. `P sounds · CVC words · AABB rhyme` |
 | `description`  | ✓        | string  | One or two sentences for the library card |
 | `year`         | ✓        | integer | Publication year, e.g. `2026` |
-| `purchaseUrl`  |          | string  | Full URL to buy the physical book. Leave `""` if not yet listed |
+| `price`        |          | integer | Cover price as a whole number, e.g. `149`. Shows as a badge on the library card |
+| `currency`     |          | string  | ISO currency code for the price, e.g. `"INR"`. Determines the symbol shown (₹ for INR) |
+| `purchaseUrl`  |          | string  | Full Instamojo (or other) URL for the buy button. Leave `""` until the product is listed |
 
 ## id Naming Rules
 
