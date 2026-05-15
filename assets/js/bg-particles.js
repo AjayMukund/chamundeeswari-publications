@@ -301,7 +301,10 @@
     }
 
     /* ══════════════════════════════════════════════════
-       Mouse-trail canvas
+       Mouse-trail canvas — v2
+       Dark : additive-blend sparkles (3 shapes, 3 warm tones)
+       Light: coloured petals & dots from butterfly palette
+       Both : click burst + leader particle + air resistance
     ══════════════════════════════════════════════════ */
     if (NO_ANIM) return;
 
@@ -320,84 +323,172 @@
         H = canvas.height = window.innerHeight;
     });
 
+    /* Dark-mode sparkle colour palette (weighted toward gold) */
+    var DARK_COLORS  = ['#fff8d0','#fff8d0','#fcd060','#fcd060','#fcd060','#e89a5c'];
+    /* Particle shape types */
+    var DARK_TYPES   = ['sparkle4','sparkle4','star5','dot'];
+    var LIGHT_TYPES  = ['petal','petal','petal','dot'];
+
     var pts = [];
     var lastTrailTime = 0;
+    var emitCount = 0; /* tracks when to emit a leader */
 
+    /* ── Spawn helper ── */
+    function spawnParticle(x, y, vx, vy, dark, leader) {
+        var r = Math.random();
+        return {
+            x: x, y: y,
+            vx: vx, vy: vy,
+            life:  1,
+            decay: leader ? rnd(0.016, 0.026) : rnd(0.030, 0.052),
+            size:  leader ? rnd(5.5, 9.0)     : rnd(2.2, 5.0),
+            rot:   rnd(0, Math.PI * 2),
+            rotv:  rnd(-0.16, 0.16),
+            dark:  dark,
+            type:  dark
+                ? DARK_TYPES[Math.floor(r * DARK_TYPES.length)]
+                : LIGHT_TYPES[Math.floor(r * LIGHT_TYPES.length)],
+            color: dark
+                ? DARK_COLORS[Math.floor(r * DARK_COLORS.length)]
+                : BFLY_COLORS[Math.floor(Math.random() * BFLY_COLORS.length)],
+        };
+    }
+
+    /* ── Move-trail emitter ── */
     document.addEventListener('mousemove', function (e) {
         if (viewerEl && !viewerEl.hidden) return;
-
         var now = performance.now();
-        if (now - lastTrailTime < 18) return;
+        if (now - lastTrailTime < 16) return;
         lastTrailTime = now;
+        emitCount++;
 
-        var dark  = document.documentElement.classList.contains('dark');
-        var burst = 2 + (Math.random() < 0.35 ? 1 : 0);
+        var dark   = document.documentElement.classList.contains('dark');
+        var burst  = 2 + (Math.random() < 0.38 ? 1 : 0);
+        var leader = (emitCount % 5 === 0); /* every 5th frame gets a leader */
+
         for (var i = 0; i < burst; i++) {
-            pts.push({
-                x:    e.clientX + rnd(-5, 5),
-                y:    e.clientY + rnd(-5, 5),
-                vx:   rnd(-1.4, 1.4),
-                vy:   rnd(-2.8, -0.8),
-                life: 1,
-                decay: rnd(0.026, 0.046),
-                size:  rnd(2.8, 5.5),
-                rot:   rnd(0, Math.PI * 2),
-                rotv:  rnd(-0.12, 0.12),
-                dark:  dark,
-            });
+            pts.push(spawnParticle(
+                e.clientX + rnd(-6, 6),
+                e.clientY + rnd(-6, 6),
+                rnd(-1.6, 1.6),
+                rnd(-3.4, -0.6),
+                dark,
+                leader && i === 0
+            ));
         }
     });
 
-    function drawSparkle(p, sz, a) {
-        ctx.save();
-        ctx.globalAlpha = a;
-        ctx.fillStyle   = '#fcd060';
-        ctx.shadowColor = '#c8763e';
-        ctx.shadowBlur  = sz * 4;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        var o = sz, inn = sz * 0.27;
+    /* ── Click / tap burst ── */
+    document.addEventListener('mousedown', function (e) {
+        if (viewerEl && !viewerEl.hidden) return;
+        var dark = document.documentElement.classList.contains('dark');
+        var N = 16;
+        for (var i = 0; i < N; i++) {
+            var angle = (i / N) * Math.PI * 2;
+            var speed = rnd(2.2, 5.0);
+            pts.push(spawnParticle(
+                e.clientX, e.clientY,
+                Math.cos(angle) * speed,
+                Math.sin(angle) * speed,
+                dark,
+                i < 4 /* first 4 rays are leaders */
+            ));
+        }
+    });
+
+    /* ── Draw: 4-pointed sparkle (dark) ── */
+    function drawSparkle4(p, sz, a) {
+        var o = sz, inn = sz * 0.26;
         ctx.beginPath();
         ctx.moveTo(0, -o);
         ctx.lineTo(inn, -inn); ctx.lineTo(o, 0);
-        ctx.lineTo(inn, inn);  ctx.lineTo(0, o);
+        ctx.lineTo(inn,  inn); ctx.lineTo(0, o);
         ctx.lineTo(-inn, inn); ctx.lineTo(-o, 0);
-        ctx.lineTo(-inn, -inn);
+        ctx.lineTo(-inn,-inn);
         ctx.closePath();
         ctx.fill();
-        ctx.restore();
     }
 
-    function drawPetal(p, sz, a) {
+    /* ── Draw: 5-pointed star (dark) ── */
+    function drawStar5(p, sz, a) {
+        var outer = sz, inner = sz * 0.42;
+        ctx.beginPath();
+        for (var i = 0; i < 5; i++) {
+            var oa = (i * 4 * Math.PI / 5) - Math.PI / 2;
+            var ia = ((i * 2 + 1) * Math.PI / 5) - Math.PI / 2;
+            if (i === 0) ctx.moveTo(Math.cos(oa) * outer, Math.sin(oa) * outer);
+            else          ctx.lineTo(Math.cos(oa) * outer, Math.sin(oa) * outer);
+            ctx.lineTo(Math.cos(ia) * inner, Math.sin(ia) * inner);
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    /* ── Draw: oval petal (light) ── */
+    function drawPetal(sz) {
+        ctx.scale(0.65, 1.9);
+        ctx.beginPath();
+        ctx.arc(0, 0, sz * 0.52, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    /* ── Draw: round dot ── */
+    function drawDot(sz) {
+        ctx.beginPath();
+        ctx.arc(0, 0, sz * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    /* ── Unified particle renderer ── */
+    function drawParticle(p, sz, a) {
         ctx.save();
-        ctx.globalAlpha = a;
-        ctx.fillStyle   = '#c8763e';
-        ctx.shadowColor = 'rgba(200, 118, 62, 0.55)';
-        ctx.shadowBlur  = sz * 2.8;
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rot);
-        ctx.scale(1.0, 1.8);
-        ctx.beginPath();
-        ctx.arc(0, 0, sz * 0.6, 0, Math.PI * 2);
-        ctx.fill();
+
+        if (p.dark) {
+            /* additive blending — overlapping sparks bloom bright */
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.globalAlpha = a * 0.92;
+            ctx.fillStyle   = p.color;
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur  = sz * 6;
+            if      (p.type === 'star5')    drawStar5(p, sz, a);
+            else if (p.type === 'dot')       drawDot(sz);
+            else                             drawSparkle4(p, sz, a);
+        } else {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = a * 0.85;
+            ctx.fillStyle   = p.color;
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur  = sz * 3;
+            if (p.type === 'dot') drawDot(sz);
+            else                  drawPetal(sz);
+        }
+
         ctx.restore();
     }
 
+    /* ── Animation loop ── */
     function trailLoop() {
         ctx.clearRect(0, 0, W, H);
+        ctx.globalCompositeOperation = 'source-over'; /* reset after dark additive batch */
+
         for (var i = pts.length - 1; i >= 0; i--) {
             var p = pts[i];
             p.life -= p.decay;
             p.x    += p.vx;
             p.y    += p.vy;
-            p.vy   += 0.07;
+            p.vx   *= 0.984;   /* gentle air resistance */
+            p.vy   *= 0.984;
+            p.vy   += p.dark ? 0.05 : 0.08;  /* gravity — petals fall faster */
             p.rot  += p.rotv;
             if (p.life <= 0) { pts.splice(i, 1); continue; }
-            var sz = p.size * p.life;
-            var a  = p.life * p.life;
-            if (p.dark) drawSparkle(p, sz, a);
-            else         drawPetal(p, sz, a);
+            var sz = p.size * (0.4 + 0.6 * p.life); /* partial size shrink */
+            var a  = p.life * p.life;                 /* quadratic fade */
+            drawParticle(p, sz, a);
         }
+
+        ctx.globalCompositeOperation = 'source-over';
         requestAnimationFrame(trailLoop);
     }
     trailLoop();
