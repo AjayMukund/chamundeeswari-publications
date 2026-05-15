@@ -137,6 +137,59 @@
     50%       { opacity: 0.4; transform: scale(1.55); }
 }
 
+/* ── Social links ──────────────────────────────────── */
+.socs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.soc {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gold-border);
+    border-radius: 9px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.22s ease;
+    background: var(--bg-card);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+}
+
+.soc-li:hover { border-color: rgba(10,102,194,.45); color: #0a66c2; background: rgba(10,102,194,.09); }
+.soc-wa:hover { border-color: rgba(37,211,102,.45); color: #25d366; background: rgba(37,211,102,.09); }
+.soc-yt:hover { border-color: rgba(255, 0,  0,.35); color: #ff0000; background: rgba(255, 0,  0,.07); }
+.soc-ig:hover { border-color: rgba(225,48,108,.40); color: #e1306c; background: rgba(225,48,108,.09); }
+
+/* ── Google Map ────────────────────────────────────── */
+.contact-map {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--gold-border);
+    height: 220px;
+}
+
+.contact-map iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+html.dark .contact-map iframe {
+    filter: invert(0.88) hue-rotate(155deg) saturate(0.60) brightness(0.82);
+}
+
 /* ── FAQ ───────────────────────────────────────────── */
 .contact-faq {
     margin-bottom: 32px;
