@@ -61,6 +61,15 @@ function createCard(book) {
 
     card.addEventListener('click', () => { App.openBook(book); });
 
+    /* Hover / focus pre-render — start PDF render in the background so
+       the book opens instantly (or mostly so) when the user clicks. */
+    let _preRenderTimer;
+    card.addEventListener('mouseenter', () => {
+        _preRenderTimer = setTimeout(() => App.getOrRender(book), 500);
+    });
+    card.addEventListener('mouseleave', () => clearTimeout(_preRenderTimer));
+    card.addEventListener('focusin', () => App.getOrRender(book), { once: true });
+
     if (book.purchaseUrl) {
         const buyBtn = document.createElement('a');
         buyBtn.className = 'btn-buy';
@@ -74,22 +83,34 @@ function createCard(book) {
 
     const skel = card.querySelector(`#skel-${book.id}`);
 
-    if (book.cover) {
-        const img = document.createElement('img');
-        img.src   = book.cover;
-        img.alt   = book.title;
-        img.onload  = () => skel.replaceWith(img);
-        img.onerror = () => extractCoverFromPdf(book.file, `cover_${book.id}`)
-                               .then(url => { if (url) { img.src = url; skel.replaceWith(img); } });
-    } else {
-        extractCoverFromPdf(book.file, `cover_${book.id}`).then(url => {
-            if (!url) return;
-            const img = document.createElement('img');
-            img.src = url;
-            img.alt = book.title;
-            skel.replaceWith(img);
-        });
+    /* Lazy cover load — only fetch when card enters the viewport (+ 300px margin).
+       Falls back to extracting page 1 from the PDF if no cover image is set. */
+    function _loadCover() {
+        if (book.cover) {
+            const img   = document.createElement('img');
+            img.alt     = book.title;
+            img.onload  = () => skel.replaceWith(img);
+            img.onerror = () => extractCoverFromPdf(book.file, `cover_${book.id}`)
+                                   .then(url => { if (url) { img.src = url; skel.replaceWith(img); } });
+            img.src = book.cover;
+        } else {
+            extractCoverFromPdf(book.file, `cover_${book.id}`).then(url => {
+                if (!url) return;
+                const img = document.createElement('img');
+                img.src   = url;
+                img.alt   = book.title;
+                skel.replaceWith(img);
+            });
+        }
     }
+
+    const _coverObserver = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+            _loadCover();
+            _coverObserver.disconnect();
+        }
+    }, { rootMargin: '300px' });
+    _coverObserver.observe(skel);
 
     return card;
 }

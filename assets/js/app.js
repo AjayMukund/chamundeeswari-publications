@@ -6,7 +6,8 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-const RENDER_SCALE = 1.0;
+const RENDER_SCALE = 1.0;   // increase to 1.5–2.0 for sharper text on HiDPI displays
+const JPEG_QUALITY = 0.88;  // 0.88 gives ~25% smaller blobs vs 0.95 with no visible loss
 
 /* ── Caches ────────────────────────────────────────── */
 const _pageCache     = new Map();  // bookId → pageEls[]
@@ -49,7 +50,7 @@ async function _renderBook(book) {
 
         // Convert to JPEG blob → img, releasing GPU canvas texture memory
         const blobUrl = await new Promise(resolve =>
-            canvas.toBlob(blob => resolve(URL.createObjectURL(blob)), 'image/jpeg', 0.95)
+            canvas.toBlob(blob => resolve(URL.createObjectURL(blob)), 'image/jpeg', JPEG_QUALITY)
         );
 
         const img     = document.createElement('img');
